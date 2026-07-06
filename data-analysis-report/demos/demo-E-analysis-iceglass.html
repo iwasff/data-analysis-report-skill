@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo E · Analysis · Ice-Glass · Montserrat · Standard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ─── STYLE CONFIG ───────────────────────────────────────────
+   Mode       : analysis
+   Palette    : ice-glass  (CamPulse 冰透玻璃风格 v6)
+   UI Style   : glass-round  (高透白玻璃 + 超大圆角)
+   Typography : glass-round  (Montserrat + 幼圆/YouYuan)
+   Motion     : standard
+──────────────────────────────────────────────────────────── */
+:root {
+  --c-deep:  #2F414A;
+  --c-mid:   #5C7E8C;
+  --c-soft:  #7DA59C;
+  --c-muted: #9BB8BC;
+  --card:    rgba(255,255,255,.30);
+  --card2:   rgba(255,255,255,.20);
+  --bd:      rgba(255,255,255,.55);
+  --bd2:     rgba(255,255,255,.15);
+  --sh:      0 8px 32px rgba(47,65,74,.12);
+  --sh-h:    0 16px 48px rgba(47,65,74,.20);
+  --ok:   #7DA59C; --ok-bg:  rgba(125,165,156,.15);
+  --warn: #8A9E7A; --warn-bg: rgba(138,158,122,.12);
+  --bad:  #9E7A7A; --bad-bg:  rgba(158,122,122,.12);
+  --ff: 'Montserrat','幼圆','YouYuan','PingFang SC',sans-serif;
+  --fm: 'Montserrat','幼圆','YouYuan',monospace;
+  --e1: cubic-bezier(.16,1,.3,1);
+  --e2: cubic-bezier(.34,1.56,.64,1);
+  --r:  24px; --r2: 18px; --r3: 12px;
+  --nav: 210px; --top: 48px;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  font-family: var(--ff);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--c-deep);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(160deg,
+    #6a9aa6 0%, #8fb8b4 20%, #B2CECB 50%,
+    #CEDFDE 72%, #DEEAEB 88%, #EBF3F3 100%) fixed;
+  min-height: 100vh;
+}
+
+/* ── FOG OVERLAY ── */
+#fog {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 130% 65% at 8% 85%,  rgba(255,255,255,.08) 0%,transparent 55%),
+    radial-gradient(ellipse 80%  55% at 90% 10%,  rgba(222,234,235,.12) 0%,transparent 50%),
+    radial-gradient(ellipse 100% 50% at 50% 115%, rgba(47,65,74,.18) 0%,transparent 55%);
+  animation: fogdrift 22s ease-in-out infinite alternate;
+}
+@keyframes fogdrift { from{transform:translate(0,0)} to{transform:translate(18px,-10px) scale(1.03)} }
+
+/* ── PROGRESS ── */
+#pb { position:fixed;top:0;left:0;height:2px;background:rgba(255,255,255,.6);z-index:2000;width:0;transition:width .3s }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top:0; left:0; bottom:0; width: var(--nav);
+  background: #2F414A;
+  z-index: 100; display:flex; flex-direction:column;
+  padding: 24px 0 16px; overflow-y:auto;
+  box-shadow: 2px 0 20px rgba(0,0,0,.15);
+}
+.sb-logo { padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom:16px }
+.sb-tag  { font-family:var(--fm); font-size:9px; color:var(--c-muted); letter-spacing:2.5px; text-transform:uppercase; margin-bottom:5px; font-weight:600 }
+.sb-title { font-size:14px; font-weight:800; color:#fff; line-height:1.3 }
+.sb-cfg { margin:0 12px 16px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:var(--r3); padding:10px 14px }
+.sb-cfg-t { font-family:var(--fm); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--c-muted); margin-bottom:7px }
+.cfg-row { display:flex; align-items:center; gap:7px; margin-bottom:4px }
+.cfg-dot { width:5px; height:5px; border-radius:50%; background:var(--c-soft); flex-shrink:0 }
+.cfg-k { font-size:10px; color:rgba(155,184,188,.5); width:60px; flex-shrink:0 }
+.cfg-v { font-family:var(--fm); font-size:10px; color:#A8CCE0; font-weight:700 }
+.sb-nav { flex:1; padding:8px 10px }
+.sb-link {
+  display:flex; align-items:center; gap:9px; padding:8px 10px;
+  border-radius: var(--r3); font-size:12.5px; color:rgba(255,255,255,.5);
+  cursor:pointer; border:1px solid transparent; transition:all .18s; font-weight:500;
+}
+.sb-link:hover { background:rgba(255,255,255,.1); color:rgba(255,255,255,.85) }
+.sb-link.active { background:rgba(255,255,255,.15); color:#fff; font-weight:700; border-color:rgba(255,255,255,.12) }
+.sb-link svg { width:13px; height:13px; flex-shrink:0; opacity:.55 }
+.sb-foot { padding:14px 20px; border-top:1px solid rgba(255,255,255,.08); font-family:var(--fm); font-size:9px; color:rgba(155,184,188,.3); letter-spacing:.1em }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top:0; left:var(--nav); right:0; height:var(--top);
+  background: #2F414A;
+  display:flex; align-items:center; padding:0 28px; z-index:90; gap:14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+}
+.tb-t { font-family:var(--fm); font-size:10px; color:rgba(155,184,188,.7); font-weight:600; letter-spacing:.08em }
+.tb-sep { width:1px; height:12px; background:rgba(255,255,255,.1) }
+.tb-badge { font-family:var(--fm); font-size:10px; padding:3px 10px; border-radius:100px; background:rgba(255,255,255,.12); color:rgba(222,234,235,.7); border:1px solid rgba(255,255,255,.15); font-weight:600 }
+.tb-r { margin-left:auto; font-family:var(--fm); font-size:10px; color:rgba(155,184,188,.4); font-weight:600 }
+
+/* ── MAIN ── */
+.main { margin-left:var(--nav); padding-top:var(--top); position:relative; z-index:1 }
+
+/* ── COVER ── */
+.cover-sec {
+  min-height: 90vh; display:flex; align-items:center;
+  padding: 60px 56px; position:relative; overflow:hidden;
+}
+.cv-bubble1 { position:absolute; top:-80px; right:-60px; width:360px; height:360px; border-radius:50%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); animation:ga 18s ease-in-out infinite alternate; pointer-events:none }
+.cv-bubble2 { position:absolute; bottom:-40px; right:200px; width:180px; height:180px; border-radius:50%; background:rgba(222,234,235,.08); border:1px solid rgba(255,255,255,.1); animation:ga 26s ease-in-out infinite alternate-reverse; pointer-events:none }
+@keyframes ga { from{transform:scale(1)} to{transform:scale(1.07) translate(8px,-8px)} }
+.cv-inner { max-width:600px; position:relative; z-index:1 }
+.cv-ew { font-family:var(--fm); font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:rgba(47,65,74,.5); display:inline-flex; align-items:center; gap:10px; margin-bottom:20px; font-weight:700 }
+.cv-ew::before { content:''; width:14px; height:1px; background:currentColor }
+.cv-h1 { font-size:clamp(2.4rem,4.5vw,4rem); font-weight:900; line-height:1.06; letter-spacing:-.03em; color:var(--c-deep); margin-bottom:14px }
+.cv-h1 em { font-style:normal; color:#3E5661 }
+.cv-sub { font-size:15px; color:rgba(47,65,74,.6); margin-bottom:32px; font-weight:400; line-height:1.72 }
+.cv-stats { display:flex; gap:36px; margin-bottom:26px; padding-bottom:24px; border-bottom:1px solid rgba(47,65,74,.1) }
+.cvs-n { font-size:2rem; font-weight:900; color:var(--c-deep); line-height:1 }
+.cvs-l { font-size:12px; color:rgba(47,65,74,.45); margin-top:5px; font-weight:500 }
+.cv-chips { display:flex; gap:8px; flex-wrap:wrap }
+.chip { font-size:10px; padding:5px 14px; border-radius:100px; border:1px solid rgba(47,65,74,.18); color:rgba(47,65,74,.5); background:rgba(255,255,255,.3); backdrop-filter:blur(8px); font-weight:600; cursor:default }
+
+/* ── SECTION ── */
+.section { padding:36px 40px; border-bottom:1px solid rgba(255,255,255,.15); background:transparent }
+.sec-head { display:flex; align-items:center; gap:10px; margin-bottom:24px }
+.sec-tag { font-family:var(--fm); font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.45); font-weight:700 }
+.sec-title { font-size:19px; font-weight:900; color:var(--c-deep); letter-spacing:-.02em }
+.sec-badge { font-family:var(--fm); font-size:9px; padding:2px 9px; border-radius:100px; background:rgba(255,255,255,.3); color:rgba(47,65,74,.55); border:1px solid rgba(255,255,255,.5); font-weight:700 }
+
+/* ── GLASS CARD ── */
+.gc {
+  background: var(--card);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  transition: transform .2s var(--e2), box-shadow .2s;
+  overflow: hidden;
+}
+.gc:hover { transform:translateY(-4px); box-shadow:var(--sh-h) }
+
+/* ── KPI STRIP ── */
+.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:14px }
+.ks { padding:22px 24px; position:relative }
+.ks::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--ks-ac, rgba(255,255,255,.4)); border-radius:var(--r) var(--r) 0 0 }
+.ks-lbl { font-family:var(--fm); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(47,65,74,.5); margin-bottom:12px; font-weight:700 }
+.ks-val { font-size:2.2rem; font-weight:900; color:var(--c-deep); line-height:1; margin-bottom:6px; letter-spacing:-.03em }
+.ks-sub { font-size:12px; color:var(--c-mid); font-weight:500 }
+
+/* ── TABS ── */
+.tab-wrap { padding:0 }
+.tab-bar { display:flex; gap:6px; padding:16px 24px 0; flex-wrap:wrap }
+.tab-btn { font-family:var(--fm); font-size:9px; padding:5px 14px; border-radius:100px; border:1px solid rgba(255,255,255,.4); background:rgba(255,255,255,.2); color:rgba(47,65,74,.5); cursor:pointer; transition:all .15s; backdrop-filter:blur(8px); font-weight:700; letter-spacing:.04em }
+.tab-btn:hover { border-color:rgba(255,255,255,.65); color:var(--c-mid) }
+.tab-btn.on { background:rgba(255,255,255,.55); border-color:rgba(255,255,255,.8); color:var(--c-deep); font-weight:800 }
+.tab-pane { display:none; padding:16px 24px 20px }
+.tab-pane.on { display:block }
+.chart-box { width:100%; height:300px }
+
+/* ── INSIGHT CARDS ── */
+.ins-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px }
+.ins-card {
+  background: var(--card);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--bd);
+  border-left: 3px solid rgba(47,65,74,.3);
+  border-radius: var(--r);
+  padding: 20px 22px; display:flex; flex-direction:column; gap:10px;
+  box-shadow: var(--sh); transition:transform .2s var(--e2),box-shadow .2s;
+}
+.ins-card:hover { transform:translateY(-3px); box-shadow:var(--sh-h) }
+.ins-card.ok   { border-left-color:var(--ok) }
+.ins-card.warn { border-left-color:var(--warn) }
+.ins-card.bad  { border-left-color:var(--bad) }
+.ins-head { font-size:13px; font-weight:800; color:var(--c-deep); line-height:1.4 }
+.ins-body { font-size:12.5px; color:var(--c-mid); line-height:1.7; font-weight:500 }
+
+/* ── ARCH CARDS ── */
+.arch-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px }
+.arch-card { padding:24px 22px; position:relative; overflow:hidden }
+.arch-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--r) var(--r) 0 0 }
+.arch-card.c1::before { background:linear-gradient(90deg,var(--c-soft),var(--c-muted)) }
+.arch-card.c2::before { background:linear-gradient(90deg,var(--c-mid),var(--c-soft)) }
+.arch-card.c3::before { background:linear-gradient(90deg,rgba(155,184,188,.6),var(--c-mid)) }
+.arch-n { font-family:var(--fm); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(47,65,74,.4); margin-bottom:10px; font-weight:700 }
+.arch-t { font-size:15px; font-weight:800; color:var(--c-deep); margin-bottom:5px }
+.arch-file { font-family:var(--fm); font-size:10px; color:var(--c-soft); opacity:.7; margin-bottom:12px }
+.arch-d { font-size:12.5px; color:var(--c-mid); line-height:1.68; font-weight:500 }
+.arch-badge { display:inline-block; font-family:var(--fm); font-size:9px; padding:3px 10px; border-radius:100px; background:rgba(125,165,156,.15); color:var(--ok); border:1px solid rgba(125,165,156,.3); margin-top:12px; font-weight:700 }
+
+/* ── SCENE CARDS ── */
+.scene-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px }
+.scene-card { padding:22px 20px; cursor:default }
+.scene-ic { width:40px; height:40px; border-radius:14px; background:rgba(255,255,255,.35); display:flex; align-items:center; justify-content:center; margin-bottom:14px; border:1px solid rgba(255,255,255,.55); box-shadow:0 4px 12px rgba(47,65,74,.08) }
+.scene-ic svg { width:55%; height:55%; stroke:var(--c-deep) }
+.scene-t { font-size:14px; font-weight:800; color:var(--c-deep); margin-bottom:7px }
+.scene-d { font-size:12px; color:var(--c-mid); line-height:1.65; font-weight:500 }
+.scene-tag { font-family:var(--fm); font-size:9px; padding:3px 10px; border-radius:100px; background:rgba(255,255,255,.3); color:rgba(47,65,74,.5); border:1px solid rgba(255,255,255,.5); display:inline-block; margin-top:10px; font-weight:700 }
+
+/* ── CONFIG ── */
+.cfg-code { background:rgba(47,65,74,.12); border-radius:var(--r2); padding:16px 20px; font-family:var(--fm); font-size:12px; color:rgba(47,65,74,.7); line-height:1.9; border:1px solid rgba(47,65,74,.1) }
+.cfg-hl { color:var(--c-deep); font-weight:800 }
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(16px); transition:opacity .55s var(--e1),transform .55s var(--e1) }
+.reveal.revealed { opacity:1; transform:none }
+.reveal.d1{transition-delay:.07s}.reveal.d2{transition-delay:.14s}
+.reveal.d3{transition-delay:.21s}.reveal.d4{transition-delay:.28s}
+</style>
+</head>
+<body>
+<div id="fog"></div>
+<div id="pb"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-tag">Data Report Skill</div>
+    <div class="sb-title">Demo E<br>Ice-Glass</div>
+  </div>
+  <div class="sb-cfg">
+    <div class="sb-cfg-t">STYLE CONFIG</div>
+    <div class="cfg-row"><span class="cfg-dot"></span><span class="cfg-k">Mode</span><span class="cfg-v">analysis</span></div>
+    <div class="cfg-row"><span class="cfg-dot" style="background:var(--c-muted)"></span><span class="cfg-k">Palette</span><span class="cfg-v">ice-glass</span></div>
+    <div class="cfg-row"><span class="cfg-dot" style="background:#A8CCE0"></span><span class="cfg-k">UI</span><span class="cfg-v">glass-round</span></div>
+    <div class="cfg-row"><span class="cfg-dot"></span><span class="cfg-k">Type</span><span class="cfg-v">glass-round</span></div>
+    <div class="cfg-row"><span class="cfg-dot" style="background:var(--c-soft)"></span><span class="cfg-k">Motion</span><span class="cfg-v">standard</span></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-link active" onclick="navTo('#cover')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>概览</div>
+    <div class="sb-link" onclick="navTo('#s1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>数据指标</div>
+    <div class="sb-link" onclick="navTo('#s2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/></svg>图表切换</div>
+    <div class="sb-link" onclick="navTo('#s3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>世界地图</div>
+    <div class="sb-link" onclick="navTo('#s4')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>三层架构</div>
+    <div class="sb-link" onclick="navTo('#s5')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>使用场景</div>
+    <div class="sb-link" onclick="navTo('#s6')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Config</div>
+  </div>
+  <div class="sb-foot">SKILL v3.0 · Ice-Glass · 2026.03</div>
+</nav>
+
+<!-- Topbar -->
+<div class="topbar">
+  <span class="tb-t">Data Analysis Report Skill · Demo E</span>
+  <div class="tb-sep"></div>
+  <span class="tb-badge">ice-glass · glass-round · standard</span>
+  <span class="tb-r">冰透玻璃风格 v6</span>
+</div>
+
+<div class="main">
+
+  <!-- Cover -->
+  <div class="cover-sec" id="cover">
+    <div class="cv-bubble1"></div>
+    <div class="cv-bubble2"></div>
+    <div class="cv-inner">
+      <div class="cv-ew reveal">Demo E · Analysis · Ice-Glass Palette · Standard Motion</div>
+      <h1 class="cv-h1 reveal d1">冰透玻璃<br><em>报告风格</em></h1>
+      <p class="cv-sub reveal d2">浅冰蓝渐变背景 + 高透明度白玻璃卡片 + 超大圆角<br>来自 CamPulse 冰透玻璃风格 v6，现已纳入 Report Skill 配色体系</p>
+      <div class="cv-stats reveal d3">
+        <div><div class="cvs-n" id="cn1">0</div><div class="cvs-l">已生成报告</div></div>
+        <div><div class="cvs-n" id="cn2">0</div><div class="cvs-l">设计维度</div></div>
+        <div><div class="cvs-n">5</div><div class="cvs-l">Report 风格</div></div>
+      </div>
+      <div class="cv-chips reveal d4">
+        <span class="chip">Ice-Blue Gradient BG</span>
+        <span class="chip">rgba(255,255,255,.30) Glass</span>
+        <span class="chip">24px Round Corners</span>
+        <span class="chip">Montserrat + 幼圆</span>
+        <span class="chip">Fog Drift Animation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1 KPIs -->
+  <section class="section" id="s1">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Overview</span>
+      <span class="sec-title">Skill 使用数据</span>
+      <span class="sec-badge">示意数据</span>
+    </div>
+    <div class="kpi-strip">
+      <div class="gc ks reveal d1" style="--ks-ac:var(--c-soft)">
+        <div class="ks-lbl">报告总数</div><div class="ks-val" id="k1">0</div><div class="ks-sub">过去12个月</div>
+      </div>
+      <div class="gc ks reveal d2" style="--ks-ac:var(--c-mid)">
+        <div class="ks-lbl">Ice-Glass 占比</div><div class="ks-val" id="k2">0<span style="font-size:.45em">%</span></div><div class="ks-sub">浅色系首选</div>
+      </div>
+      <div class="gc ks reveal d3" style="--ks-ac:var(--c-muted)">
+        <div class="ks-lbl">平均耗时</div><div class="ks-val" id="k3">0<span style="font-size:.45em">min</span></div><div class="ks-sub">含访谈+生成</div>
+      </div>
+      <div class="gc ks reveal d4" style="--ks-ac:rgba(255,255,255,.6)">
+        <div class="ks-lbl">风格组合数</div><div class="ks-val">384</div><div class="ks-sub">2×4×4×3×3</div>
+      </div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card ok reveal d1">
+        <div class="ins-head">Ice-Glass 与 Dark-Glass 的区别</div>
+        <div class="ins-body">两者都是 glass UI，但底色完全相反。Ice-Glass 是浅冰蓝渐变底 + 高透白玻璃（透明度 30%），内容在通透感中浮现；Dark-Glass 是近黑暗底 + 低透白玻璃（透明度 6%），更强调夜间科技感</div>
+      </div>
+      <div class="ins-card reveal d2">
+        <div class="ins-head">glass-round 字体体系</div>
+        <div class="ins-body">Montserrat（西文数字，圆润几何感）+ 幼圆/YouYuan（中文，圆体）。两种字体气质高度统一，配合超大圆角卡片（24px），整体呈现柔和、通透、清爽的气质</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S2 Tab Charts -->
+  <section class="section" id="s2">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Charts</span>
+      <span class="sec-title">图表切换展示</span>
+      <span class="sec-badge">4 种图表</span>
+    </div>
+    <div class="gc reveal tab-wrap">
+      <div class="tab-bar">
+        <div class="tab-btn on" onclick="switchTab(0)">月度趋势</div>
+        <div class="tab-btn" onclick="switchTab(1)">风格分布</div>
+        <div class="tab-btn" onclick="switchTab(2)">耗时散点</div>
+        <div class="tab-btn" onclick="switchTab(3)">模式占比</div>
+      </div>
+      <div class="tab-pane on" id="tp0"><div class="chart-box" id="ct0"></div></div>
+      <div class="tab-pane" id="tp1"><div class="chart-box" id="ct1"></div></div>
+      <div class="tab-pane" id="tp2"><div class="chart-box" id="ct2"></div></div>
+      <div class="tab-pane" id="tp3"><div class="chart-box" id="ct3"></div></div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card ok reveal d1">
+        <div class="ins-head">Ice-Glass 图表配色</div>
+        <div class="ins-body">冷蓝绿色系 — 与背景渐变完全融合，图表本身像是从背景中「生长」出来的，而不是叠加上去的。严重度色也去饱和：ok 用 #7DA59C，bad 用 #9E7A7A，柔和而专业</div>
+      </div>
+      <div class="ins-card warn reveal d2">
+        <div class="ins-head">卡片透明度对图表的影响</div>
+        <div class="ins-body">高透明度卡片（30%）在图表内部会透出背景渐变，需要在 ECharts 配置里把图表背景设为 transparent，让渐变自然透出，不用额外设置底色</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S3 World Map -->
+  <section class="section" id="s3">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Map</span>
+      <span class="sec-title">全球使用分布</span>
+      <span class="sec-badge">示意 · 世界地图</span>
+    </div>
+    <div class="gc reveal" style="padding:22px 24px">
+      <div style="font-size:13px;font-weight:700;color:var(--c-deep);margin-bottom:3px">各地区 Skill 报告生成量</div>
+      <div style="font-size:12px;color:var(--c-mid);margin-bottom:16px">Ice-Glass 地图配色 — 浅青绿渐变，与冰透背景融为一体，轻盈而专业</div>
+      <div class="chart-box" id="ct-map" style="height:360px"></div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card ok reveal d1">
+        <div class="ins-head">地图 · Ice-Glass 配色逻辑</div>
+        <div class="ins-body">空白区域用接近背景的浅冰蓝（#DEEAEB），数据区用从浅到深的蓝绿色阶，最高值区域用 #5C7E8C。整体像是在冰面上的水彩渲染，轻盈不沉重</div>
+      </div>
+      <div class="ins-card reveal d2">
+        <div class="ins-head">什么场景适合 Ice-Glass 地图</div>
+        <div class="ins-body">明色系、易阅读、打印友好。适合全球市场报告、品牌分析报告、对外展示场景。相比 Dark-Glass 地图更柔和，不会给读者带来视觉压迫感</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S4 Architecture -->
+  <section class="section" id="s4">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Architecture</span>
+      <span class="sec-title">三层解耦架构</span>
+      <span class="sec-badge">核心设计</span>
+    </div>
+    <div class="arch-grid">
+      <div class="gc arch-card c1 reveal d1">
+        <div class="arch-n">LAYER 01 · 定义层</div>
+        <div class="arch-t">PRD 字段定义</div>
+        <div class="arch-file">product_requirements.md</div>
+        <div class="arch-d">每个指标的口径、分母、业务逻辑，用自然语言写成。换人、换数据不需要重新对齐，是整套体系的「单一真理源」</div>
+        <span class="arch-badge">可追溯 · 可传递</span>
+      </div>
+      <div class="gc arch-card c2 reveal d2">
+        <div class="arch-n">LAYER 02 · 计算层</div>
+        <div class="arch-t">Python 纯计算</div>
+        <div class="arch-file">analyze.py → data.json</div>
+        <div class="arch-d">只做聚合、排序、计算，输出结构化 JSON，绝不包含任何自然语言判断。同样输入永远同样输出——根本上消除 AI 幻觉</div>
+        <span class="arch-badge">确定性 · 可验证</span>
+      </div>
+      <div class="gc arch-card c3 reveal d3">
+        <div class="arch-n">LAYER 03 · 洞察层</div>
+        <div class="arch-t">Claude 报告生成</div>
+        <div class="arch-file">JSON → HTML Report</div>
+        <div class="arch-d">读取计算好的 JSON，Claude 只做它擅长的——语言与判断。按 Style Config 调用对应维度代码库，生成完整单文件 HTML 报告</div>
+        <span class="arch-badge">洞察 · 可视化</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 Scenarios -->
+  <section class="section" id="s5">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Use Cases</span>
+      <span class="sec-title">Ice-Glass 适用场景</span>
+      <span class="sec-badge">推荐组合</span>
+    </div>
+    <div class="scene-grid">
+      <div class="gc scene-card reveal d1">
+        <div class="scene-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></div>
+        <div class="scene-t">品牌竞品分析</div>
+        <div class="scene-d">CamPulse 原生场景。冰透玻璃的通透质感与品牌情报的「客观中立」气质完全契合，不会因颜色本身带入立场</div>
+        <span class="scene-tag">原生场景</span>
+      </div>
+      <div class="gc scene-card reveal d2">
+        <div class="scene-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="scene-t">对外展示报告</div>
+        <div class="scene-d">轻盈清爽，不显刻意。送给客户、合作方、投资人时，冰蓝渐变传递出专业且不冷漠的气质，是明色系中质感最强的选择</div>
+        <span class="scene-tag">对外首选</span>
+      </div>
+      <div class="gc scene-card reveal d3">
+        <div class="scene-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="scene-t">用户洞察报告</div>
+        <div class="scene-d">评论分析、人群画像、场景交叉——柔和去饱和的警示色（ok/warn/bad 全部调低饱和度），不会因颜色本身给读者造成情绪暗示</div>
+        <span class="scene-tag">中性呈现</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S6 Config -->
+  <section class="section" id="s6">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Config</span>
+      <span class="sec-title">Style Config</span>
+      <span class="sec-badge">Phase 0 输出格式</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="gc reveal d1" style="padding:24px">
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(47,65,74,.4);margin-bottom:12px;font-weight:700">DEMO E CONFIG</div>
+        <div class="cfg-code">
+<span style="color:rgba(47,65,74,.35)">╔═ STYLE CONFIG v3.0 ════════╗</span>
+  Mode       │ <span class="cfg-hl">analysis</span>
+  Palette    │ <span class="cfg-hl">ice-glass</span>
+  UI Style   │ <span class="cfg-hl">glass-round</span>
+  Typography │ <span class="cfg-hl">glass-round</span>
+  Motion     │ <span class="cfg-hl">standard</span>
+<span style="color:rgba(47,65,74,.35)">╚════════════════════════════╝</span></div>
+        <div style="font-size:12px;color:var(--c-mid);margin-top:14px;line-height:1.7;font-weight:500">Phase 0 问答完成后输出此格式，复制粘贴进新对话，Claude 直接读取配置生成对应风格报告</div>
+      </div>
+      <div class="gc reveal d2" style="padding:24px">
+        <div style="font-size:14px;font-weight:800;color:var(--c-deep);margin-bottom:14px">五种风格对比</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;padding:9px 14px;background:rgba(208,152,106,.08);border-radius:var(--r3);border-left:3px solid #D0986A">
+            <span style="font-size:12px;color:var(--c-mid)"><strong style="color:var(--c-deep)">A</strong> warm-green + serif — 暖琥珀，Noto Serif，内部汇报</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 14px;background:rgba(91,141,184,.08);border-radius:var(--r3);border-left:3px solid #5B8DB8">
+            <span style="font-size:12px;color:var(--c-mid)"><strong style="color:var(--c-deep)">B</strong> ocean-blue + sans — 冷蓝，Montserrat，对外商务</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 14px;background:rgba(122,154,184,.08);border-radius:var(--r3);border-left:3px solid #7a9ab8">
+            <span style="font-size:12px;color:var(--c-mid)"><strong style="color:var(--c-deep)">C</strong> dark-glass + expressive — 暗底玻璃，粒子，Slide 叙事</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 14px;background:rgba(193,127,74,.08);border-radius:var(--r3);border-left:3px solid #C17F4A">
+            <span style="font-size:12px;color:var(--c-mid)"><strong style="color:var(--c-deep)">D</strong> slate-warm + editorial — 石板暖色，Playfair，杂志排版</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 14px;background:rgba(125,165,156,.12);border-radius:var(--r3);border-left:3px solid var(--c-soft)">
+            <span style="font-size:12px;color:var(--c-mid)"><strong style="color:var(--c-deep)">E</strong> ice-glass + glass-round — 冰透玻璃，幼圆，品牌情报</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+function navTo(id){ document.querySelector(id)?.scrollIntoView({behavior:'smooth'}); }
+
+function countUp(id,to){
+  const el=document.getElementById(id);if(!el)return;
+  const dur=1200,st=Date.now();
+  (function tick(){const t=Math.min(1,(Date.now()-st)/dur),e=1-(1-t)**3;
+    el.textContent=Math.round(e*to);if(t<1)requestAnimationFrame(tick);
+  })();
+}
+setTimeout(()=>{countUp('cn1',247);countUp('cn2',5);countUp('k1',247);countUp('k2',19);countUp('k3',28);},400);
+
+/* Nav active */
+const secObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){
+  const id=en.target.id||'cover';
+  document.querySelectorAll('.sb-link').forEach(l=>{
+    const m=l.getAttribute('onclick')?.match(/'#([^']+)'/)?.[1];
+    l.classList.toggle('active',m===id||(id==='cover'&&m==='cover'));
+  });
+}});},{threshold:.3});
+document.querySelectorAll('.cover-sec,.section').forEach(s=>secObs.observe(s));
+
+/* Progress */
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('pb').style.width=((h.scrollTop/(h.scrollHeight-h.clientHeight))*100)+'%';
+});
+
+/* Reveal */
+const revObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('revealed');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ECharts — ice-glass color system */
+const IC=['#7DA59C','#9BB8BC','#5C7E8C','#8A9E7A','#9E7A7A','#BACFCE','#4A7A82','#2F414A'];
+const TT={backgroundColor:'rgba(47,65,74,.92)',borderColor:'rgba(255,255,255,.2)',
+  textStyle:{color:'rgba(222,234,235,.9)',fontSize:12},borderRadius:14,padding:[10,14]};
+const AX={axisLabel:{color:'rgba(47,65,74,.5)',fontSize:11},
+  axisLine:{lineStyle:{color:'rgba(255,255,255,.3)'}},
+  splitLine:{lineStyle:{color:'rgba(255,255,255,.2)',type:'dashed'}}};
+
+const charts=[];
+function mkChart(id,opt){
+  const c=echarts.init(document.getElementById(id),null,{renderer:'canvas'});
+  c.setOption(opt);charts.push(c);window.addEventListener('resize',()=>c.resize());return c;
+}
+
+mkChart('ct0',{
+  backgroundColor:'transparent',
+  tooltip:{...TT,trigger:'axis'},
+  legend:{data:['analysis','narrative'],textStyle:{color:'rgba(47,65,74,.55)',fontSize:11}},
+  grid:{top:32,right:20,bottom:30,left:44},
+  xAxis:{type:'category',data:['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],...AX,splitLine:{show:false}},
+  yAxis:{type:'value',...AX},
+  series:[
+    {name:'analysis',type:'line',smooth:true,data:[18,22,19,28,31,24,27,33,29,36,41],
+     lineStyle:{color:IC[0],width:3},itemStyle:{color:IC[0]},symbolSize:5,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:IC[0]+'66'},{offset:1,color:IC[0]+'00'}]}}},
+    {name:'narrative',type:'line',smooth:true,data:[8,10,9,14,17,13,15,18,14,19,23],
+     lineStyle:{color:IC[2],width:2.5},itemStyle:{color:IC[2]},symbolSize:4,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:IC[2]+'44'},{offset:1,color:IC[2]+'00'}]}}}
+  ]
+});
+mkChart('ct1',{
+  backgroundColor:'transparent',
+  tooltip:{...TT,trigger:'axis',axisPointer:{type:'shadow'}},
+  grid:{top:20,right:20,bottom:30,left:72},
+  xAxis:{type:'value',...AX},
+  yAxis:{type:'category',data:['Dark-Glass','Slate-Warm','Ocean-Blue','Warm-Green','Ice-Glass'],...AX,splitLine:{show:false}},
+  series:[{type:'bar',
+    data:[{value:26,itemStyle:{color:IC[6]}},{value:51,itemStyle:{color:'#B0A880'}},
+          {value:74,itemStyle:{color:'#5B8DB8'}},{value:96,itemStyle:{color:'#D0986A'}},{value:24,itemStyle:{color:IC[0]}}],
+    barMaxWidth:22,itemStyle:{borderRadius:[0,8,8,0]},
+    label:{show:true,position:'right',formatter:'{c} 份',color:'rgba(47,65,74,.5)',fontSize:11}}]
+});
+mkChart('ct2',{
+  backgroundColor:'transparent',
+  tooltip:{...TT,formatter:p=>`生成时长: ${p.data[0]}min<br>满意度: ${p.data[1]}%`},
+  grid:{top:20,right:20,bottom:40,left:44},
+  xAxis:{name:'生成时长(min)',type:'value',...AX,nameTextStyle:{color:'rgba(47,65,74,.45)',fontSize:11}},
+  yAxis:{name:'满意度(%)',type:'value',...AX,nameTextStyle:{color:'rgba(47,65,74,.45)',fontSize:11}},
+  series:[{type:'scatter',data:[[14,98],[18,95],[22,92],[25,91],[28,94],[32,88],[38,85],[44,82],[52,80],[60,77]],
+    itemStyle:{color:IC[0],opacity:.8},symbolSize:10}]
+});
+mkChart('ct3',{
+  backgroundColor:'transparent',
+  tooltip:{...TT,trigger:'item',formatter:'{b}: {c}份 ({d}%)'},
+  legend:{orient:'vertical',right:20,top:'center',textStyle:{color:'rgba(47,65,74,.55)',fontSize:12}},
+  series:[{type:'pie',radius:['42%','68%'],center:['38%','50%'],
+    data:[{value:96,name:'Warm-Green'},{value:74,name:'Ocean-Blue'},
+          {value:51,name:'Slate-Warm'},{value:26,name:'Dark-Glass'},{value:24,name:'Ice-Glass'}],
+    itemStyle:{borderRadius:8,borderColor:'rgba(255,255,255,.6)',borderWidth:2},
+    label:{show:false},color:IC}]
+});
+
+const tabBtns=document.querySelectorAll('.tab-btn');
+const tabPanes=document.querySelectorAll('.tab-pane');
+function switchTab(i){
+  tabBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  tabPanes.forEach((p,j)=>p.classList.toggle('on',j===i));
+  charts[i]?.resize();
+}
+
+/* World Map */
+fetch('https://cdn.jsdelivr.net/npm/echarts/map/json/world.json')
+  .then(r=>r.json())
+  .then(w=>{
+    echarts.registerMap('worldE',w);
+    const mc=echarts.init(document.getElementById('ct-map'));
+    mc.setOption({
+      backgroundColor:'transparent',
+      tooltip:{...TT,trigger:'item',formatter:p=>p.name+': '+(p.value||0)+' 份报告'},
+      visualMap:{min:0,max:42,left:16,bottom:16,calculable:true,
+        inRange:{color:['#DEEAEB','#B2CECB','#9BB8BC','#7DA59C','#5C7E8C','#2F414A']},
+        textStyle:{color:'rgba(47,65,74,.5)',fontSize:11}},
+      series:[{type:'map',map:'worldE',roam:true,
+        itemStyle:{areaColor:'#E8F3F3',borderColor:'rgba(155,184,188,.4)',borderWidth:.5},
+        emphasis:{itemStyle:{areaColor:'#7DA59C'},label:{show:false}},
+        data:[
+          {name:'China',value:42},{name:'United States',value:38},{name:'Germany',value:22},
+          {name:'Japan',value:18},{name:'United Kingdom',value:16},{name:'France',value:14},
+          {name:'Canada',value:12},{name:'Australia',value:11},{name:'South Korea',value:9},
+          {name:'Brazil',value:8},{name:'India',value:7},{name:'Netherlands',value:6},
+          {name:'Sweden',value:5},{name:'Singapore',value:5},{name:'Spain',value:4}
+        ]}]
+    });
+    window.addEventListener('resize',()=>mc.resize());
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Data Analysis Report"
+  short_description: "Build standalone HTML dashboards and insight reports."
+  brand_color: "#7A6A4A"
+  default_prompt: "Use $data-analysis-report to turn this data into a self-contained HTML report."
+policy:
+  allow_implicit_invocation: true

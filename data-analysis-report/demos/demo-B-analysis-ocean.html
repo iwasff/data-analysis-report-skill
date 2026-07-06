@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo B · Analysis · Ocean-Blue · Solid · Standard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── STYLE CONFIG ───────────────────────────────────────────
+   Mode       : analysis
+   Palette    : ocean-blue
+   UI Style   : solid
+   Typography : sans  (Montserrat num / Inter body)
+   Motion     : standard
+──────────────────────────────────────────────────────────── */
+:root{
+  --bg:#4A7A96;--bg2:#D8E8F0;--card:#F0F8FC;
+  --dark:#1A2F3A;--primary:#2E6DA4;--tag:#C8DFF0;
+  --text:#0A0F14;--muted:#2A3A48;--light:#4A6A80;
+  --border:#7AA8C0;--border-lt:#A8CCE0;
+  --sd:#906060;--sw:#C8A870;--sn:#8AAAC0;--sok:#3A8A6A;
+  --accent:#5B8DB8;--accent2:#7AAED4;
+  --ff:'Inter',sans-serif;
+  --fnum:'Montserrat',sans-serif;
+  --fm:'Space Mono',monospace;
+  --nav:240px;--top:48px;--r:10px;
+  --shadow:0 2px 10px rgba(26,47,58,.12);
+  --shadow-h:0 8px 24px rgba(26,47,58,.2);
+  --e1:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:0;left:0;width:var(--nav);height:100vh;
+  background:var(--dark);display:flex;flex-direction:column;z-index:200;overflow-y:auto}
+.sb-logo{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-brand{font-family:var(--fnum);font-size:13px;font-weight:700;color:#A8CCE0;letter-spacing:.02em}
+.sb-sub{font-size:10px;color:rgba(168,204,224,.35);margin-top:3px;font-family:var(--fm);letter-spacing:.06em}
+.sb-cfg{margin:14px 14px;background:rgba(91,141,184,.12);border:1px solid rgba(91,141,184,.2);
+  border-radius:8px;padding:10px 14px}
+.sb-cfg-t{font-family:var(--fm);font-size:9px;letter-spacing:.14em;color:var(--sn);margin-bottom:7px}
+.cfg-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.cfg-k{font-size:10px;color:rgba(168,204,224,.35);width:64px;flex-shrink:0}
+.cfg-v{font-family:var(--fm);font-size:10px;color:#A8CCE0;font-weight:700}
+.sb-nav{flex:1;padding:10px 0}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;
+  color:rgba(168,204,224,.5);text-decoration:none;cursor:pointer;
+  border-left:2px solid transparent;transition:all .2s}
+.sb-link:hover{color:#A8CCE0;background:rgba(255,255,255,.04)}
+.sb-link.active{color:#A8CCE0;border-left-color:var(--accent2);background:rgba(91,141,184,.1)}
+.sb-link svg{width:13px;height:13px;flex-shrink:0;opacity:.5}
+.sb-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);
+  font-family:var(--fm);font-size:9px;color:rgba(168,204,224,.25);letter-spacing:.1em}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:var(--nav);right:0;height:var(--top);
+  background:rgba(26,47,58,.97);border-bottom:1px solid rgba(122,168,192,.25);
+  z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-t{font-family:var(--fnum);font-size:13px;font-weight:600;color:#A8CCE0;letter-spacing:.01em}
+.tb-badge{font-family:var(--fm);font-size:10px;padding:3px 10px;border-radius:100px;
+  background:rgba(91,141,184,.15);color:var(--accent2);border:1px solid rgba(91,141,184,.25)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--nav);padding-top:var(--top)}
+
+/* ── COVER ── */
+.cover-sec{min-height:88vh;background:var(--dark);display:flex;align-items:center;
+  padding:60px 48px;position:relative;overflow:hidden}
+.cover-grad{position:absolute;top:-20%;right:-10%;width:55%;height:140%;
+  background:radial-gradient(ellipse at center,rgba(91,141,184,.12) 0%,transparent 65%);
+  pointer-events:none}
+.cover-grid{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(91,141,184,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(91,141,184,.04) 1px,transparent 1px);
+  background-size:40px 40px}
+.cv-inner{max-width:600px;position:relative;z-index:1}
+.cv-ew{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sn);display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.cv-ew::before{content:'';width:18px;height:1px;background:var(--accent2)}
+.cv-h1{font-family:var(--fnum);font-size:clamp(2.6rem,4.5vw,4rem);font-weight:900;
+  line-height:1.06;letter-spacing:-.03em;color:#F0F8FC;margin-bottom:16px}
+.cv-h1 span{color:var(--accent2)}
+.cv-sub{font-size:15px;color:rgba(168,204,224,.6);line-height:1.75;margin-bottom:28px;font-weight:300}
+.cv-kpis{display:flex;gap:32px;margin-bottom:24px;padding-bottom:24px;
+  border-bottom:1px solid rgba(122,168,192,.15)}
+.ck-n{font-family:var(--fnum);font-size:2rem;font-weight:800;color:var(--accent2);line-height:1}
+.ck-l{font-size:12px;color:rgba(168,204,224,.4);margin-top:4px}
+.cv-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--fm);font-size:10px;padding:4px 12px;border-radius:4px;
+  border:1px solid rgba(91,141,184,.3);color:rgba(91,141,184,.7);
+  background:rgba(91,141,184,.08);letter-spacing:.06em}
+
+/* ── SECTION ── */
+.section{padding:40px 48px;border-bottom:1px solid rgba(122,168,192,.15)}
+.section:nth-child(even){background:var(--bg2)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.sec-title{font-family:var(--fnum);font-size:17px;font-weight:700;color:var(--text)}
+.sec-badge{font-family:var(--fm);font-size:10px;padding:2px 9px;border-radius:4px;
+  background:rgba(122,168,192,.15);color:var(--muted)}
+
+/* ── SOLID CARD ── */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  border:1px solid rgba(122,168,192,.25);transition:transform .22s,box-shadow .22s;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-h)}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.ks{padding:16px 18px;position:relative}
+.ks::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--ks-ac,var(--sn));border-radius:var(--r) var(--r) 0 0}
+.ks-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin-bottom:8px;font-weight:600}
+.ks-val{font-family:var(--fnum);font-size:1.5rem;font-weight:800;color:var(--text);line-height:1;margin-bottom:6px}
+.ks-badge{font-family:var(--fm);font-size:10px;padding:2px 7px;border-radius:6px;
+  background:rgba(46,109,164,.1);color:var(--primary)}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:0;margin-bottom:0;border-bottom:2px solid rgba(122,168,192,.15)}
+.tab-btn{padding:10px 20px;font-size:13px;font-weight:500;color:var(--light);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab-btn:hover{color:var(--text);background:rgba(122,168,192,.06)}
+.tab-btn.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+.tab-pane{display:none;padding-top:16px}.tab-pane.on{display:block}
+.chart-box{width:100%;height:300px}
+
+/* ── INSIGHT ── */
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.ins{background:var(--card);border-radius:0 var(--r) var(--r) 0;
+  border-left:3px solid var(--sn);padding:13px 16px;box-shadow:var(--shadow)}
+.ins.info{border-color:var(--accent);background:#EBF5FB}
+.ins.ok{border-color:var(--sok);background:#EBF7F2}
+.ins.warn{border-color:var(--sw);background:#FBF6EB}
+.ins-head{font-family:var(--fnum);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.ins-body{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── SCENE GRID ── */
+.scene-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.scene-card{padding:20px 18px}
+.scene-ac{height:3px;border-radius:2px;margin-bottom:14px}
+.scene-t{font-family:var(--fnum);font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.scene-d{font-size:12px;color:var(--muted);line-height:1.6}
+.scene-tag{font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:4px;
+  background:rgba(46,109,164,.1);color:var(--primary);display:inline-block;margin-top:10px}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s var(--e1),transform .55s var(--e1)}
+.reveal.revealed{opacity:1;transform:none}
+.reveal.d1{transition-delay:.07s}.reveal.d2{transition-delay:.14s}
+.reveal.d3{transition-delay:.21s}.reveal.d4{transition-delay:.28s}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">Data Report Skill</div>
+    <div class="sb-sub">DEMO B · ANALYSIS × OCEAN-BLUE × STANDARD</div>
+  </div>
+  <div class="sb-cfg">
+    <div class="sb-cfg-t">STYLE CONFIG</div>
+    <div class="cfg-row"><span class="cfg-k">Mode</span><span class="cfg-v">analysis</span></div>
+    <div class="cfg-row"><span class="cfg-k">Palette</span><span class="cfg-v">ocean-blue</span></div>
+    <div class="cfg-row"><span class="cfg-k">UI</span><span class="cfg-v">solid</span></div>
+    <div class="cfg-row"><span class="cfg-k">Type</span><span class="cfg-v">sans</span></div>
+    <div class="cfg-row"><span class="cfg-k">Motion</span><span class="cfg-v">standard</span></div>
+  </div>
+  <div class="sb-nav">
+    <a class="sb-link active" onclick="navTo('#cover')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>概览</a>
+    <a class="sb-link" onclick="navTo('#s1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>数据指标</a>
+    <a class="sb-link" onclick="navTo('#s2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/></svg>图表切换</a>
+    <a class="sb-link" onclick="navTo('#s3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>世界地图</a>
+    <a class="sb-link" onclick="navTo('#s4')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>使用场景</a>
+    <a class="sb-link" onclick="navTo('#s5')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Config</a>
+  </div>
+  <div class="sb-foot">SKILL v3.0 · 2026.03</div>
+</nav>
+
+<div class="topbar">
+  <span class="tb-t">Data Analysis Report Skill · Demo B · Ocean-Blue</span>
+  <span class="tb-badge">ocean-blue · solid · standard</span>
+</div>
+
+<div class="main">
+
+  <!-- Cover -->
+  <div class="cover-sec" id="cover">
+    <div class="cover-grad"></div>
+    <div class="cover-grid"></div>
+    <div class="cv-inner">
+      <div class="cv-ew reveal">Demo B · Analysis Mode · Ocean-Blue · Solid · Standard</div>
+      <h1 class="cv-h1 reveal d1">数据分析<br><span>清晰呈现</span><br>高效决策</h1>
+      <p class="cv-sub reveal d2">Ocean-Blue + Solid 卡片 — 商务清晰风格<br>Tab 切换图表 + 世界地图 + Standard 动效</p>
+      <div class="cv-kpis reveal d3">
+        <div><div class="ck-n" id="cn1">0</div><div class="ck-l">已生成报告</div></div>
+        <div style="width:1px;height:36px;background:rgba(122,168,192,.15)"></div>
+        <div><div class="ck-n" id="cn2">0<span style="font-size:.5em">min</span></div><div class="ck-l">平均耗时</div></div>
+        <div style="width:1px;height:36px;background:rgba(122,168,192,.15)"></div>
+        <div><div class="ck-n">5</div><div class="ck-l">设计维度</div></div>
+      </div>
+      <div class="cv-chips reveal d4">
+        <span class="chip">Ocean-Blue Palette</span>
+        <span class="chip">Solid Cards</span>
+        <span class="chip">Tab Switch Charts</span>
+        <span class="chip">World Map</span>
+        <span class="chip">Grid Background</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1 KPIs -->
+  <section class="section" id="s1">
+    <div class="sec-head reveal">
+      <span class="sec-title">Skill 使用数据</span>
+      <span class="sec-badge">示意数据 · 2025–2026</span>
+    </div>
+    <div class="kpi-strip">
+      <div class="card ks reveal d1" style="--ks-ac:var(--accent)"><div class="ks-lbl">报告总数</div><div class="ks-val" id="k1">0</div><span class="ks-badge">12个月</span></div>
+      <div class="card ks reveal d2" style="--ks-ac:var(--accent2)"><div class="ks-lbl">Ocean-Blue 占比</div><div class="ks-val" id="k2">0<span style="font-size:.5em">%</span></div><span class="ks-badge">商务场景</span></div>
+      <div class="card ks reveal d3" style="--ks-ac:var(--sok)"><div class="ks-lbl">平均耗时</div><div class="ks-val" id="k3">0<span style="font-size:.5em">min</span></div><span class="ks-badge">含访谈+生成</span></div>
+      <div class="card ks reveal d4" style="--ks-ac:var(--sn)"><div class="ks-lbl">用户满意度</div><div class="ks-val">94<span style="font-size:.5em">%</span></div><span class="ks-badge">n=48</span></div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins info reveal d1"><div class="ins-head">Ocean-Blue 的气质</div><div class="ins-body">冷色蓝调，清晰克制。Solid 卡片在浅蓝系背景下对比度最佳，适合数据密集的长文档阅读，也是打印效果最优的配色之一</div></div>
+      <div class="ins ok reveal d2"><div class="ins-head">Standard Motion 的取舍</div><div class="ins-body">Scroll reveal + Counter + ECharts 入场动效。不使用粒子背景——Ocean-Blue 本身的冷静气质不需要额外氛围渲染，让数据本身成为主角</div></div>
+    </div>
+  </section>
+
+  <!-- S2 Tab Charts -->
+  <section class="section" id="s2">
+    <div class="sec-head reveal">
+      <span class="sec-title">Tab 切换图表展示</span>
+      <span class="sec-badge">4 种图表类型</span>
+    </div>
+    <div class="card reveal" style="padding:0;overflow:hidden">
+      <div style="padding:16px 24px 0;border-bottom:2px solid rgba(122,168,192,.12)">
+        <div class="tab-bar" style="border:none">
+          <div class="tab-btn on" onclick="switchTab(0)">月度趋势</div>
+          <div class="tab-btn" onclick="switchTab(1)">配色分布</div>
+          <div class="tab-btn" onclick="switchTab(2)">耗时散点</div>
+          <div class="tab-btn" onclick="switchTab(3)">模式占比</div>
+        </div>
+      </div>
+      <div style="padding:4px 24px 20px">
+        <div class="tab-pane on" id="tp0"><div class="chart-box" id="ct0"></div></div>
+        <div class="tab-pane" id="tp1"><div class="chart-box" id="ct1"></div></div>
+        <div class="tab-pane" id="tp2"><div class="chart-box" id="ct2"></div></div>
+        <div class="tab-pane" id="tp3"><div class="chart-box" id="ct3"></div></div>
+      </div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins info reveal d1"><div class="ins-head">Tab 切换的设计逻辑</div><div class="ins-body">同一数据集的多角度解读，用 Tab 代替并排图表——节省空间，引导读者按自己需要的角度切入，每次只看一个维度</div></div>
+      <div class="ins ok reveal d2"><div class="ins-head">Ocean-Blue 图表色序</div><div class="ins-body">冷蓝色系为主，从深蓝 #906060（警示）到浅青 #8AAAC0，柔和且专业，不会因为颜色本身分散对数据的注意力</div></div>
+    </div>
+  </section>
+
+  <!-- S3 World Map -->
+  <section class="section" id="s3">
+    <div class="sec-head reveal">
+      <span class="sec-title">全球使用分布</span>
+      <span class="sec-badge">示意数据 · 世界地图</span>
+    </div>
+    <div class="card reveal" style="padding:20px 24px">
+      <div style="font-family:var(--fnum);font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">各地区 Skill 报告生成量</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Ocean-Blue 地图配色：冷蓝渐变，空白区域浅灰蓝，专业感强，跨国报告首选</div>
+      <div class="chart-box" id="ct-map" style="height:360px"></div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins info reveal d1"><div class="ins-head">地图 · Ocean-Blue 配色</div><div class="ins-body">蓝色系渐变，从浅灰蓝（无数据）到深海蓝（高数值）。冷色系地图在商务汇报中最容易被接受，不显刻意</div></div>
+      <div class="ins warn reveal d2"><div class="ins-head">旁白：地图加载说明</div><div class="ins-body">地图 JSON 约 400KB，从 jsDelivr CDN 异步加载。网络慢时建议先展示其他 section，地图渲染完成前显示加载占位</div></div>
+    </div>
+  </section>
+
+  <!-- S4 Scenarios -->
+  <section class="section" id="s4">
+    <div class="sec-head reveal">
+      <span class="sec-title">推荐使用场景</span>
+      <span class="sec-badge">Ocean-Blue · Solid · Standard</span>
+    </div>
+    <div class="scene-grid">
+      <div class="card scene-card reveal d1">
+        <div class="scene-ac" style="background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+        <div class="scene-t">对外商务汇报</div>
+        <div class="scene-d">向客户、合作方、投资人展示数据。Ocean-Blue 冷静专业，Solid 卡片边界清晰，适合正式场合</div>
+        <span class="scene-tag">强烈推荐</span>
+      </div>
+      <div class="card scene-card reveal d2">
+        <div class="scene-ac" style="background:linear-gradient(90deg,var(--accent2),var(--sn))"></div>
+        <div class="scene-t">全球市场分析</div>
+        <div class="scene-d">跨国数据对比，世界地图是必要组件。Ocean-Blue 地图配色与整体风格高度统一，不出现突兀的配色断层</div>
+        <span class="scene-tag">地图首选配色</span>
+      </div>
+      <div class="card scene-card reveal d3">
+        <div class="scene-ac" style="background:linear-gradient(90deg,var(--sn),var(--sok))"></div>
+        <div class="scene-t">数据共享文档</div>
+        <div class="scene-d">需要分发给多个受众、跨设备查看的报告。Standard 动效兼容性最好，Ocean-Blue 明色系打印也清晰</div>
+        <span class="scene-tag">兼容性优先</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 Config -->
+  <section class="section" id="s5">
+    <div class="sec-head reveal">
+      <span class="sec-title">Style Config</span>
+      <span class="sec-badge">Phase 0 输出格式</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card reveal d1" style="padding:22px 24px">
+        <div style="font-family:var(--fm);font-size:10px;letter-spacing:.12em;color:var(--light);margin-bottom:12px">DEMO B CONFIG</div>
+        <pre style="font-family:var(--fm);font-size:12px;color:var(--muted);line-height:1.9;background:rgba(26,47,58,.06);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent)">╔═ STYLE CONFIG v3.0 ════════╗
+  Mode       │ analysis
+  Palette    │ ocean-blue
+  UI Style   │ solid
+  Typography │ sans
+  Motion     │ standard
+╚════════════════════════════╝</pre>
+        <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7">Phase 0 生成后直接复制，粘贴到新对话 Claude 自动读取风格配置</div>
+      </div>
+      <div class="card reveal d2" style="padding:22px 24px">
+        <div style="font-family:var(--fnum);font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">与其他 Demo 的对比</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:12px;color:var(--muted)">
+          <div style="padding:9px 14px;background:rgba(91,141,184,.08);border-radius:8px;border-left:3px solid var(--accent)">
+            <strong style="color:var(--text)">Demo A</strong> · warm-green + serif — 专业朴实，宋体大标题，适合内部汇报
+          </div>
+          <div style="padding:9px 14px;background:rgba(58,138,106,.08);border-radius:8px;border-left:3px solid var(--sok)">
+            <strong style="color:var(--text)">Demo B（本页）</strong> · ocean-blue + sans — 商务清晰，冷蓝专业，适合对外
+          </div>
+          <div style="padding:9px 14px;background:rgba(122,154,184,.08);border-radius:8px;border-left:3px solid var(--sn)">
+            <strong style="color:var(--text)">Demo C</strong> · dark-glass + expressive — 技术展示，粒子动效，全屏叙事
+          </div>
+          <div style="padding:9px 14px;background:rgba(193,127,74,.08);border-radius:8px;border-left:3px solid var(--sw)">
+            <strong style="color:var(--text)">Demo D</strong> · slate-warm + editorial — 杂志排版，留白，Serif 大字
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+function navTo(id){ document.querySelector(id)?.scrollIntoView({behavior:'smooth'}); }
+
+function countUp(id,to){
+  const el=document.getElementById(id);if(!el)return;
+  const dur=1200,st=Date.now();
+  (function tick(){const t=Math.min(1,(Date.now()-st)/dur),e=1-(1-t)**3;
+    el.textContent=Math.round(e*to);if(t<1)requestAnimationFrame(tick);
+  })();
+}
+setTimeout(()=>{countUp('cn1',247);countUp('cn2',31);countUp('k1',247);countUp('k2',31);countUp('k3',28);},400);
+
+/* Nav active */
+const secObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){
+  const id=en.target.id||'cover';
+  document.querySelectorAll('.sb-link').forEach(l=>{
+    const m=l.getAttribute('onclick')?.match(/'#([^']+)'/)?.[1];
+    l.classList.toggle('active',m===id||(id==='cover'&&m==='cover'));
+  });
+}});},{threshold:.3});
+document.querySelectorAll('.cover-sec,.section').forEach(s=>secObs.observe(s));
+
+/* Reveal */
+const revObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('revealed');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ECharts */
+const OB=['#5B8DB8','#7AAED4','#8AAAC0','#3A8A6A','#906060','#C8A870','#2E6DA4','#1A4A6A'];
+const TT={backgroundColor:'rgba(26,47,58,.96)',borderColor:'rgba(122,168,192,.3)',
+  textStyle:{color:'#D8E8F0',fontSize:12},borderRadius:8,padding:[10,14]};
+const AX={axisLabel:{color:'#4A6A80',fontSize:11},
+  axisLine:{lineStyle:{color:'rgba(122,168,192,.2)'}},
+  splitLine:{lineStyle:{color:'rgba(122,168,192,.12)',type:'dashed'}}};
+
+const charts=[];
+function mkChart(id,opt){
+  const c=echarts.init(document.getElementById(id));
+  c.setOption(opt);charts.push(c);window.addEventListener('resize',()=>c.resize());return c;
+}
+
+mkChart('ct0',{
+  tooltip:{...TT,trigger:'axis'},legend:{data:['analysis','narrative'],textStyle:{color:'#4A6A80',fontSize:11}},
+  grid:{top:32,right:20,bottom:30,left:44},
+  xAxis:{type:'category',data:['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],
+    ...AX,splitLine:{show:false}},
+  yAxis:{type:'value',...AX},
+  series:[
+    {name:'analysis',type:'line',smooth:true,data:[18,22,19,28,31,24,27,33,29,36,41],
+     lineStyle:{color:OB[0],width:3},itemStyle:{color:OB[0]},symbolSize:5,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:OB[0]+'55'},{offset:1,color:OB[0]+'00'}]}}},
+    {name:'narrative',type:'line',smooth:true,data:[8,10,9,14,17,13,15,18,14,19,23],
+     lineStyle:{color:OB[2],width:2.5},itemStyle:{color:OB[2]},symbolSize:4,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:OB[2]+'40'},{offset:1,color:OB[2]+'00'}]}}}
+  ]
+});
+mkChart('ct1',{
+  tooltip:{...TT,trigger:'axis',axisPointer:{type:'shadow'}},
+  grid:{top:20,right:20,bottom:30,left:64},
+  xAxis:{type:'value',...AX},
+  yAxis:{type:'category',data:['Warm-Green','Ocean-Blue','Slate-Warm','Dark-Glass'],...AX,splitLine:{show:false}},
+  series:[{type:'bar',
+    data:[{value:96,itemStyle:{color:OB[6]}},{value:74,itemStyle:{color:OB[0]}},
+          {value:51,itemStyle:{color:OB[2]}},{value:26,itemStyle:{color:OB[1]}}],
+    barMaxWidth:28,itemStyle:{borderRadius:[0,6,6,0]},
+    label:{show:true,position:'right',formatter:'{c} 份',color:'#4A6A80',fontSize:11}}]
+});
+mkChart('ct2',{
+  tooltip:{...TT,formatter:p=>`生成时长: ${p.data[0]}min<br>满意度: ${p.data[1]}%`},
+  grid:{top:20,right:20,bottom:40,left:44},
+  xAxis:{name:'生成时长(min)',type:'value',...AX,nameTextStyle:{color:'#4A6A80',fontSize:11}},
+  yAxis:{name:'满意度(%)',type:'value',...AX,nameTextStyle:{color:'#4A6A80',fontSize:11}},
+  series:[{type:'scatter',data:[[14,98],[18,95],[22,92],[25,91],[28,94],[32,88],[38,85],[44,82],[52,80],[60,77]],
+    itemStyle:{color:OB[1],opacity:.85},symbolSize:10}]
+});
+mkChart('ct3',{
+  tooltip:{...TT,trigger:'item',formatter:'{b}: {c}份 ({d}%)'},
+  legend:{orient:'vertical',right:20,top:'center',textStyle:{color:'#4A6A80',fontSize:12}},
+  series:[{type:'pie',radius:['42%','68%'],center:['38%','50%'],
+    data:[{value:96,name:'Warm-Green'},{value:74,name:'Ocean-Blue'},
+          {value:51,name:'Slate-Warm'},{value:26,name:'Dark-Glass'}],
+    itemStyle:{borderRadius:6,borderColor:'rgba(240,248,252,.8)',borderWidth:2},
+    label:{show:false},color:OB}]
+});
+
+const tabBtns=document.querySelectorAll('.tab-btn');
+const tabPanes=document.querySelectorAll('.tab-pane');
+function switchTab(i){
+  tabBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  tabPanes.forEach((p,j)=>p.classList.toggle('on',j===i));
+  charts[i]?.resize();
+}
+
+/* World Map */
+fetch('https://cdn.jsdelivr.net/npm/echarts/map/json/world.json')
+  .then(r=>r.json())
+  .then(w=>{
+    echarts.registerMap('worldB',w);
+    const mc=echarts.init(document.getElementById('ct-map'));
+    mc.setOption({
+      tooltip:{...TT,trigger:'item',formatter:p=>p.name+': '+(p.value||0)+' 份报告'},
+      visualMap:{min:0,max:42,left:16,bottom:16,calculable:true,
+        inRange:{color:['#D8E8F0','#7AAED4','#5B8DB8','#2E6DA4','#1A2F3A']},
+        textStyle:{color:'#4A6A80',fontSize:11}},
+      series:[{type:'map',map:'worldB',roam:true,
+        itemStyle:{areaColor:'#D8E8F0',borderColor:'#A8CCE0',borderWidth:.5},
+        emphasis:{itemStyle:{areaColor:'#5B8DB8'},label:{show:false}},
+        data:[
+          {name:'China',value:42},{name:'United States',value:38},{name:'Germany',value:22},
+          {name:'Japan',value:18},{name:'United Kingdom',value:16},{name:'France',value:14},
+          {name:'Canada',value:12},{name:'Australia',value:11},{name:'South Korea',value:9},
+          {name:'Brazil',value:8},{name:'India',value:7},{name:'Netherlands',value:6},
+          {name:'Sweden',value:5},{name:'Singapore',value:5},{name:'Spain',value:4}
+        ]}]
+    });
+    window.addEventListener('resize',()=>mc.resize());
+  });
+</script>
+</body>
+</html>

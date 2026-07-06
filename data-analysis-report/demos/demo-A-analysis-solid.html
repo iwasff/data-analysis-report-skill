@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo A · Analysis · Solid · Serif · Standard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── STYLE CONFIG ───────────────────────────────────────────
+   Mode       : analysis
+   Palette    : warm-green
+   UI Style   : solid
+   Typography : serif   (Playfair Display / Noto Serif SC)
+   Motion     : standard
+──────────────────────────────────────────────────────────── */
+:root{
+  --bg:#7EA090;--bg-alt:#EDE8C0;--card:#F9F3DC;
+  --dark:#293D33;--primary:#588157;--tag:#D6E8BC;
+  --text:#0F0F0D;--muted:#3A4430;--light:#5A7050;
+  --border:#A3B18A;--border-lt:#C8D9A8;
+  --sd:#D0986A;--sw:#E3C198;--sn:#CCCEA8;--sok:#A3B18A;
+  --ff:'Noto Sans SC','Noto Serif SC',sans-serif;
+  --fh:'Playfair Display','Noto Serif SC',serif;
+  --fm:'Space Mono',monospace;
+  --nav:220px;--top:48px;--r:10px;
+  --shadow:0 2px 8px rgba(41,61,51,.1);
+  --shadow-h:0 6px 20px rgba(41,61,51,.16);
+  --e1:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:0;left:0;width:var(--nav);height:100vh;
+  background:var(--dark);display:flex;flex-direction:column;z-index:200;overflow-y:auto}
+.sb-logo{padding:24px 22px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-brand{font-family:var(--fh);font-size:15px;font-weight:700;color:#C8D9A8;line-height:1.3}
+.sb-sub{font-size:10px;color:rgba(200,217,168,.45);margin-top:4px;font-family:var(--fm);letter-spacing:.06em}
+.sb-cfg{margin:14px 14px;background:rgba(163,177,138,.12);border:1px solid rgba(163,177,138,.2);
+  border-radius:8px;padding:10px 14px}
+.sb-cfg-t{font-family:var(--fm);font-size:9px;letter-spacing:.14em;color:var(--sok);margin-bottom:7px}
+.cfg-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.cfg-k{font-size:10px;color:rgba(200,217,168,.45);width:64px;flex-shrink:0}
+.cfg-v{font-family:var(--fm);font-size:10px;color:#C8D9A8;font-weight:700}
+.sb-nav{flex:1;padding:10px 0}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;
+  color:rgba(200,217,168,.55);text-decoration:none;cursor:pointer;
+  border-left:2px solid transparent;transition:all .2s;font-family:var(--ff)}
+.sb-link:hover{color:#C8D9A8;background:rgba(255,255,255,.04)}
+.sb-link.active{color:#C8D9A8;border-left-color:var(--sd);background:rgba(208,152,106,.08)}
+.sb-link svg{width:13px;height:13px;flex-shrink:0;opacity:.5}
+.sb-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);
+  font-family:var(--fm);font-size:9px;color:rgba(200,217,168,.3);letter-spacing:.1em}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:var(--nav);right:0;height:var(--top);
+  background:rgba(41,61,51,.97);border-bottom:1px solid rgba(163,177,138,.2);
+  z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-t{font-family:var(--fh);font-size:14px;font-weight:600;color:#C8D9A8;font-style:italic}
+.tb-badge{font-family:var(--fm);font-size:10px;padding:3px 10px;border-radius:100px;
+  background:rgba(208,152,106,.15);color:var(--sd);border:1px solid rgba(208,152,106,.25)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--nav);padding-top:var(--top)}
+
+/* ── COVER ── */
+.cover-sec{min-height:90vh;background:var(--dark);display:flex;align-items:center;
+  padding:60px 48px;position:relative;overflow:hidden}
+.cover-deco{position:absolute;right:-80px;top:50%;transform:translateY(-50%);
+  width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(208,152,106,.08) 0%,transparent 70%)}
+.cv-inner{max-width:580px;position:relative;z-index:1}
+.cv-ew{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sok);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.cv-ew::before{content:'';width:18px;height:1px;background:var(--sd)}
+.cv-h1{font-family:var(--fh);font-size:clamp(2.8rem,5vw,4.5rem);font-weight:900;
+  line-height:1.06;color:#F5EAC5;margin-bottom:18px}
+.cv-h1 em{font-style:italic;color:var(--sd)}
+.cv-sub{font-size:15px;color:rgba(200,217,168,.65);line-height:1.75;margin-bottom:32px}
+.cv-stats{display:flex;gap:36px;margin-bottom:24px;padding-bottom:24px;
+  border-bottom:1px solid rgba(163,177,138,.2)}
+.cvs-n{font-family:var(--fm);font-size:2.2rem;font-weight:700;color:var(--sd);line-height:1}
+.cvs-l{font-size:12px;color:rgba(200,217,168,.5);margin-top:5px}
+.cv-note{font-family:var(--fm);font-size:10px;color:rgba(200,217,168,.3);letter-spacing:.1em}
+
+/* ── SECTIONS ── */
+.section{padding:40px 48px;border-bottom:1px solid rgba(163,177,138,.2)}
+.section:nth-child(even){background:var(--bg-alt)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.sec-title{font-family:var(--fh);font-size:18px;font-weight:700;color:var(--text)}
+.sec-badge{font-family:var(--fm);font-size:10px;padding:2px 9px;border-radius:4px;
+  background:rgba(163,177,138,.18);color:var(--muted)}
+
+/* ── SOLID CARD ── */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  border:1px solid rgba(163,177,138,.3);transition:transform .22s,box-shadow .22s;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-h)}
+
+/* ── KPI ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.ks{padding:16px 18px;position:relative}
+.ks::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--ks-ac,var(--sn));border-radius:var(--r) var(--r) 0 0}
+.ks-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--light);margin-bottom:8px;font-weight:700}
+.ks-val{font-family:var(--fm);font-size:1.5rem;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
+.ks-badge{font-size:10px;padding:2px 7px;border-radius:6px;
+  background:rgba(88,129,87,.1);color:var(--muted)}
+
+/* ── INSIGHT ── */
+.ins{background:var(--card);border-radius:0 var(--r) var(--r) 0;
+  border-left:3px solid var(--sn);padding:13px 16px;margin-bottom:8px;
+  box-shadow:var(--shadow)}
+.ins.danger{border-color:var(--sd);background:#FEF7ED}
+.ins.ok{border-color:var(--sok);background:#F2F7EE}
+.ins.warn{border-color:var(--sw);background:#FEF9EC}
+.ins-head{font-family:var(--fh);font-size:13px;font-weight:700;
+  color:var(--text);margin-bottom:4px}
+.ins-body{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── CHART CARD ── */
+.chart-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  border:1px solid rgba(163,177,138,.3);padding:22px 24px;margin-bottom:16px}
+.chart-title{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.chart-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.chart-box{width:100%;height:300px}
+
+/* ── SCENE CARDS ── */
+.scene-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.scene-card{padding:20px 18px}
+.scene-n{font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--light);margin-bottom:8px}
+.scene-t{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.scene-d{font-size:12px;color:var(--muted);line-height:1.6}
+.scene-tag{font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:4px;
+  background:rgba(163,177,138,.15);color:var(--muted);display:inline-block;margin-top:10px}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s var(--e1),transform .55s var(--e1)}
+.reveal.revealed{opacity:1;transform:none}
+.reveal.d1{transition-delay:.07s}.reveal.d2{transition-delay:.14s}
+.reveal.d3{transition-delay:.21s}.reveal.d4{transition-delay:.28s}
+</style>
+</head>
+<body>
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">Data Report Skill</div>
+    <div class="sb-sub">DEMO A · ANALYSIS × SOLID × STANDARD</div>
+  </div>
+  <div class="sb-cfg">
+    <div class="sb-cfg-t">STYLE CONFIG</div>
+    <div class="cfg-row"><span class="cfg-k">Mode</span><span class="cfg-v">analysis</span></div>
+    <div class="cfg-row"><span class="cfg-k">Palette</span><span class="cfg-v">warm-green</span></div>
+    <div class="cfg-row"><span class="cfg-k">UI</span><span class="cfg-v">solid</span></div>
+    <div class="cfg-row"><span class="cfg-k">Type</span><span class="cfg-v">serif</span></div>
+    <div class="cfg-row"><span class="cfg-k">Motion</span><span class="cfg-v">standard</span></div>
+  </div>
+  <div class="sb-nav">
+    <a class="sb-link active" onclick="navTo('#cover')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>概览</a>
+    <a class="sb-link" onclick="navTo('#s1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>数据指标</a>
+    <a class="sb-link" onclick="navTo('#s2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/></svg>使用趋势</a>
+    <a class="sb-link" onclick="navTo('#s3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>世界地图</a>
+    <a class="sb-link" onclick="navTo('#s4')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>使用场景</a>
+    <a class="sb-link" onclick="navTo('#s5')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Config</a>
+  </div>
+  <div class="sb-foot">SKILL v3.0 · 2026.03</div>
+</nav>
+
+<!-- Topbar -->
+<div class="topbar">
+  <span class="tb-t">Data Analysis Report Skill · Demo A</span>
+  <span class="tb-badge">warm-green · solid · serif</span>
+</div>
+
+<div class="main">
+
+  <!-- Cover -->
+  <div class="cover-sec" id="cover">
+    <div class="cover-deco"></div>
+    <div class="cv-inner">
+      <div class="cv-ew reveal">Demo A · Analysis Mode · Solid Cards · Serif Typography</div>
+      <h1 class="cv-h1 reveal d1">专业报告<br>从<em>口径定义</em><br>开始</h1>
+      <p class="cv-sub reveal d2">Solid 卡片 + Serif 字体 + Standard 动效 — 传统专业报告的最佳选择<br>Warm-Green 配色，有质感、朴实、适合内部数据汇报</p>
+      <div class="cv-stats reveal d3">
+        <div><div class="cvs-n" id="cn1">0</div><div class="cvs-l">已生成报告</div></div>
+        <div><div class="cvs-n" id="cn2">0</div><div class="cvs-l">平均耗时 min</div></div>
+        <div><div class="cvs-n">3</div><div class="cvs-l">架构层数</div></div>
+      </div>
+      <div class="cv-note reveal d4">SKILL v3.0 · PRD → Python Script → Claude Report · 2026.03</div>
+    </div>
+  </div>
+
+  <!-- S1: KPIs -->
+  <section class="section" id="s1">
+    <div class="sec-head reveal"><span class="sec-title">Skill 使用数据</span><span class="sec-badge">示意数据 · 2025–2026</span></div>
+    <div class="kpi-strip">
+      <div class="card ks reveal d1" style="--ks-ac:var(--sd)"><div class="ks-lbl">总报告数</div><div class="ks-val" id="k1">0</div><span class="ks-badge">12个月</span></div>
+      <div class="card ks reveal d2" style="--ks-ac:var(--sw)"><div class="ks-lbl">Warm-Green 占比</div><div class="ks-val" id="k2">0<span style="font-size:.5em">%</span></div><span class="ks-badge">最多选用</span></div>
+      <div class="card ks reveal d3" style="--ks-ac:var(--sok)"><div class="ks-lbl">Solid UI 占比</div><div class="ks-val" id="k3">0<span style="font-size:.5em">%</span></div><span class="ks-badge">最受欢迎</span></div>
+      <div class="card ks reveal d4" style="--ks-ac:var(--sn)"><div class="ks-lbl">Serif 字体占比</div><div class="ks-val">52<span style="font-size:.5em">%</span></div><span class="ks-badge">中文友好</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="ins ok reveal d1"><div class="ins-head">Solid 卡片的优势</div><div class="ins-body">明确的色彩边界让层次感直观，不依赖 backdrop-filter，兼容性最佳。Warm-Green 的深绿/浅卡片对比是 Solid UI 的经典组合</div></div>
+      <div class="ins reveal d2"><div class="ins-head">Serif 字体的适用场景</div><div class="ins-body">Playfair Display 大标题搭配 Noto Serif SC 正文，传达专业质感。适合内部月报、管理层 Review、需要「报告感」的场景</div></div>
+    </div>
+  </section>
+
+  <!-- S2: Trend -->
+  <section class="section" id="s2">
+    <div class="sec-head reveal"><span class="sec-title">月度报告生成趋势</span><span class="sec-badge">各风格对比</span></div>
+    <div class="chart-card reveal">
+      <div class="chart-title">各模式月度产出数量</div>
+      <div class="chart-sub">Analysis 模式持续领先，Narrative 模式 2025 Q4 起增速加快</div>
+      <div class="chart-box" id="ct-trend"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="ins ok reveal d1"><div class="ins-head">Standard 动效特点</div><div class="ins-body">Scroll reveal 触发元素入场，ECharts 图表自带入场动画，counter 计数器。不使用粒子背景，专注内容，加载更快</div></div>
+      <div class="ins warn reveal d2"><div class="ins-head">适合 Standard 的场景</div><div class="ins-body">内部汇报、数据共享、需要快速浏览的场景。动效存在但克制——用于引导注意力，而非展示动效本身</div></div>
+    </div>
+  </section>
+
+  <!-- S3: World Map -->
+  <section class="section" id="s3">
+    <div class="sec-head reveal"><span class="sec-title">全球使用分布</span><span class="sec-badge">示意数据 · 世界地图</span></div>
+    <div class="chart-card reveal">
+      <div class="chart-title">各地区 Skill 报告生成量</div>
+      <div class="chart-sub">Warm-Green 配色的地图：琥珀色系为数据色，空白区域米白色，与整体配色和谐一致</div>
+      <div class="chart-box" id="ct-map" style="height:360px"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:0">
+      <div class="ins ok reveal d1"><div class="ins-head">地图 · Warm-Green 配色</div><div class="ins-body">数据色用琥珀 (#D0986A)，空白区用米白 (#EDE8C0)，符合整体暖色调，没有刺眼的饱和红绿对比</div></div>
+      <div class="ins reveal d2"><div class="ins-head">地图适合的数据类型</div><div class="ins-body">有地理维度的数据：国家/地区销售、退货率分布、用户来源、合规要求差异。地图比数据表更直观</div></div>
+      <div class="ins warn reveal d3"><div class="ins-head">使用注意事项</div><div class="ins-body">世界地图需要加载 JSON 数据（约 400KB），异步加载，网络较慢时建议提供加载占位态，避免空白</div></div>
+    </div>
+  </section>
+
+  <!-- S4: Scenarios -->
+  <section class="section" id="s4">
+    <div class="sec-head reveal"><span class="sec-title">推荐使用场景</span><span class="sec-badge">Analysis · Solid · Serif</span></div>
+    <div class="scene-grid">
+      <div class="card scene-card reveal d1">
+        <div class="scene-n">SCENE 01</div>
+        <div class="scene-t">运营月度报告</div>
+        <div class="scene-d">退货率、销售趋势、库存周转，周期性数据，内部分发，需要清晰的数据层次和快速跳转</div>
+        <span class="scene-tag">推荐本组合</span>
+      </div>
+      <div class="card scene-card reveal d2">
+        <div class="scene-n">SCENE 02</div>
+        <div class="scene-t">管理层 Review</div>
+        <div class="scene-d">Serif 字体传达正式感，Solid 卡片层次清晰，Standard 动效不分散注意力，适合决策汇报</div>
+        <span class="scene-tag">强烈推荐</span>
+      </div>
+      <div class="card scene-card reveal d3">
+        <div class="scene-n">SCENE 03</div>
+        <div class="scene-t">数据存档报告</div>
+        <div class="scene-d">长期保存的分析文档，Solid UI 打印效果最佳，Warm-Green 不依赖暗色系，各设备显示一致</div>
+        <span class="scene-tag">兼容性最优</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5: Config -->
+  <section class="section" id="s5">
+    <div class="sec-head reveal"><span class="sec-title">Style Config</span><span class="sec-badge">Phase 0 输出格式</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card reveal d1" style="padding:22px 24px">
+        <div style="font-family:var(--fm);font-size:10px;letter-spacing:.12em;color:var(--light);margin-bottom:12px">DEMO A CONFIG</div>
+        <pre style="font-family:var(--fm);font-size:12px;color:var(--muted);line-height:1.9;background:rgba(41,61,51,.06);border-radius:8px;padding:14px 16px;border-left:3px solid var(--sd)">╔═ STYLE CONFIG v3.0 ════════╗
+  Mode       │ analysis
+  Palette    │ warm-green
+  UI Style   │ solid
+  Typography │ serif
+  Motion     │ standard
+╚════════════════════════════╝</pre>
+        <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7">Phase 0 生成后复制粘贴，Claude 读到 Config 块直接生成对应风格报告，无需重新选择</div>
+      </div>
+      <div class="card reveal d2" style="padding:22px 24px">
+        <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px">此组合最适合</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(163,177,138,.12);border-radius:8px;border-left:3px solid var(--sok)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--sok);flex-shrink:0;margin-top:4px"></div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">数据密集型报告</div><div style="font-size:12px;color:var(--muted)">多 KPI + 多图表 + 地图，层次分明</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(163,177,138,.12);border-radius:8px;border-left:3px solid var(--sd)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--sd);flex-shrink:0;margin-top:4px"></div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">正式汇报场景</div><div style="font-size:12px;color:var(--muted)">Playfair Display 大标题，质感和权威感并重</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(163,177,138,.12);border-radius:8px;border-left:3px solid var(--sn)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--sn);flex-shrink:0;margin-top:4px"></div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">长期存档文档</div><div style="font-size:12px;color:var(--muted)">明色系，打印友好，跨设备显示稳定</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+/* ── Counter ── */
+function countUp(id,to){
+  const el=document.getElementById(id);if(!el)return;
+  const dur=1200,st=Date.now();
+  (function tick(){const t=Math.min(1,(Date.now()-st)/dur),e=1-(1-t)**3;
+    el.textContent=Math.round(e*to);if(t<1)requestAnimationFrame(tick);
+  })();
+}
+setTimeout(()=>{countUp('cn1',247);countUp('cn2',28);countUp('k1',247);countUp('k2',39);countUp('k3',46);},400);
+
+/* ── Nav ── */
+function navTo(id){document.querySelector(id)?.scrollIntoView({behavior:'smooth'});}
+const navObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){
+  const id=en.target.id||'cover';
+  document.querySelectorAll('.sb-link').forEach(l=>{
+    const href=l.getAttribute('onclick');const m=href?.match(/'#([^']+)'/)?.[1];
+    l.classList.toggle('active',m===id||(id==='cover'&&m==='cover'));
+  });
+}});},{threshold:.3});
+document.querySelectorAll('.cover-sec,.section').forEach(s=>navObs.observe(s));
+
+/* ── Reveal ── */
+const revObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('revealed');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ── ECharts ── */
+const WG=['#D0986A','#E3C198','#CCCEA8','#A3B18A','#7EA090','#658C6E','#588157','#3A5A40'];
+const TT={backgroundColor:'rgba(41,61,51,.96)',borderColor:'rgba(163,177,138,.3)',
+  textStyle:{color:'#F5EAC5',fontSize:12},borderRadius:8,padding:[10,14]};
+const AX={axisLabel:{color:'#5A7050',fontSize:11},
+  axisLine:{lineStyle:{color:'rgba(163,177,138,.3)'}},
+  splitLine:{lineStyle:{color:'rgba(163,177,138,.2)',type:'dashed'}}};
+
+/* Trend */
+const ct=echarts.init(document.getElementById('ct-trend'));
+ct.setOption({
+  tooltip:{...TT,trigger:'axis'},
+  legend:{data:['analysis','narrative'],textStyle:{color:'#5A7050',fontSize:11}},
+  grid:{top:32,right:20,bottom:30,left:44},
+  xAxis:{type:'category',data:['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],
+    ...AX,splitLine:{show:false}},
+  yAxis:{type:'value',...AX},
+  series:[
+    {name:'analysis',type:'line',smooth:true,data:[18,22,19,28,31,24,27,33,29,36,41],
+     lineStyle:{color:WG[0],width:3},itemStyle:{color:WG[0]},symbolSize:5,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
+       colorStops:[{offset:0,color:WG[0]+'55'},{offset:1,color:WG[0]+'00'}]}}},
+    {name:'narrative',type:'line',smooth:true,data:[8,10,9,14,17,13,15,18,14,19,23],
+     lineStyle:{color:WG[4],width:2.5},itemStyle:{color:WG[4]},symbolSize:4,
+     areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
+       colorStops:[{offset:0,color:WG[4]+'40'},{offset:1,color:WG[4]+'00'}]}}}
+  ]
+});
+window.addEventListener('resize',()=>ct.resize());
+
+/* World Map */
+fetch('https://cdn.jsdelivr.net/npm/echarts/map/json/world.json')
+  .then(r=>{ if(!r.ok) throw new Error('Map fetch failed'); return r.json(); })
+  .then(w=>{
+    try{ echarts.registerMap('worldA',w); }catch(e){}
+    const mc=echarts.init(document.getElementById('ct-map'));
+    mc.setOption({
+      tooltip:{...TT,trigger:'item',formatter:p=>p.name+': '+(p.value||0)+' 份'},
+      visualMap:{min:0,max:42,left:16,bottom:16,calculable:true,
+        inRange:{color:['#F9F3DC','#E3C198','#D0986A','#A3B18A','#588157']},
+        textStyle:{color:'#5A7050',fontSize:11}},
+      series:[{type:'map',map:'worldA',roam:true,
+        itemStyle:{areaColor:'#EDE8C0',borderColor:'#C8D9A8',borderWidth:.5},
+        emphasis:{itemStyle:{areaColor:'#D0986A'},label:{show:false}},
+        data:[
+          {name:'China',value:42},{name:'United States',value:38},{name:'Germany',value:22},
+          {name:'Japan',value:18},{name:'United Kingdom',value:16},{name:'France',value:14},
+          {name:'Canada',value:12},{name:'Australia',value:11},{name:'South Korea',value:9},
+          {name:'Brazil',value:8},{name:'India',value:7},{name:'Netherlands',value:6}
+        ]}]
+    });
+    window.addEventListener('resize',()=>mc.resize());
+  });
+</script>
+</body>
+</html>

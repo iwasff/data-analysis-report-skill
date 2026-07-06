@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数据分析报告 Skill · Demo C · Narrative × Glass</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── STYLE CONFIG ───────────────────────────────────────────
+   Mode       : narrative
+   Palette    : dark-glass
+   UI Style   : glass
+   Typography : sans
+   Motion     : expressive
+──────────────────────────────────────────────────────────── */
+:root{
+  --bg:#1a1f2e; --bg2:#1f2438;
+  --glass:rgba(255,255,255,.055); --glassh:rgba(255,255,255,.09);
+  --bd:rgba(255,255,255,.09); --bdh:rgba(255,255,255,.18);
+  --sl:#7a9ab8; --sl2:#9bb4cb; --sl3:rgba(122,154,184,.15);
+  --vi:#9b94b8; --vi2:rgba(155,148,184,.15);
+  --em:#6ab4d4; --em2:rgba(106,180,212,.15);
+  --t1:#e2e8f4; --t2:#8a94a8; --t3:#464f62;
+  --ff:'Inter',sans-serif; --fm:'Space Mono',monospace;
+  --e1:cubic-bezier(.16,1,.3,1); --e2:cubic-bezier(.34,1.56,.64,1);
+  --e3:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;height:100%}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);height:100%;overflow-x:hidden}
+
+/* ── SLIDE BASE ── */
+.slide{width:100vw;height:100vh;height:100dvh;scroll-snap-align:start;
+  overflow:hidden;display:flex;flex-direction:column;position:relative}
+
+/* ── PROGRESS + NAV ── */
+#pb{position:fixed;top:0;left:0;height:2px;z-index:1000;
+  background:linear-gradient(90deg,var(--sl),var(--em));
+  transition:width .5s var(--e1);box-shadow:0 0 10px rgba(122,154,184,.4)}
+#nd{position:fixed;right:18px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:7px;z-index:100}
+.nd{width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  cursor:pointer;transition:all .3s var(--e2)}
+.nd.on{background:var(--sl);border-color:var(--sl);transform:scale(1.7);
+  box-shadow:0 0 6px rgba(122,154,184,.5)}
+.sn{position:absolute;bottom:18px;right:24px;
+  font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:.12em}
+
+/* ── ORBS ── */
+.orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:of 14s ease-in-out infinite}
+@keyframes of{0%,100%{transform:translate(0,0)}33%{transform:translate(24px,-30px)}66%{transform:translate(-18px,22px)}}
+
+/* ── STAGGER ── */
+[data-s]{opacity:0;transform:translateY(24px);transition:none}
+[data-s].vis{opacity:1;transform:none;transition:opacity .65s var(--e1),transform .65s var(--e1)}
+
+/* ── CONTENT AREA ── */
+.sc{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+  justify-content:center;padding:56px max(72px,calc(50vw - 560px));gap:22px}
+.sc.center{align-items:center;text-align:center}
+
+/* ── EYEBROW ── */
+.ew{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sl);display:inline-flex;align-items:center;gap:8px;width:fit-content}
+.ew::before{content:'';width:16px;height:1px;background:currentColor;flex-shrink:0}
+.ew.em{color:var(--em)}.ew.em::before{background:var(--em)}
+.ew.vi{color:var(--vi)}.ew.vi::before{background:var(--vi)}
+
+/* ── HEADINGS ── */
+.h1{font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:1.04;
+  letter-spacing:-.03em;color:var(--t1)}
+.h1 .g1{background:linear-gradient(135deg,var(--sl2) 0%,var(--em) 60%,#c4cdd8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h2{font-size:clamp(1.8rem,3.2vw,2.8rem);font-weight:800;line-height:1.18;
+  letter-spacing:-.025em;color:var(--t1)}
+.sub{font-size:16px;color:var(--t2);line-height:1.75;max-width:560px;font-weight:300}
+
+/* ── GLASS CARD ── */
+.gc{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--bd);border-radius:18px;position:relative;overflow:hidden;
+  transition:border-color .3s,transform .4s var(--e2),box-shadow .3s}
+.gc::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
+.gc:hover{border-color:var(--bdh);transform:translateY(-5px);
+  box-shadow:0 16px 40px rgba(0,0,0,.3)}
+
+/* ── COVER EXTRAS ── */
+canvas#cv{position:absolute;inset:0;z-index:0;pointer-events:none}
+.cv-ring{position:absolute;right:-10%;top:50%;transform:translateY(-50%);
+  width:min(50vw,540px);height:min(50vw,540px);border-radius:50%;
+  border:1px solid rgba(122,154,184,.07);pointer-events:none;z-index:1;
+  animation:ringspin 70s linear infinite}
+.cv-ring::before,.cv-ring::after{content:'';position:absolute;border-radius:50%;
+  border:1px solid rgba(122,154,184,.05)}
+.cv-ring::before{inset:18%}
+.cv-ring::after{inset:38%}
+@keyframes ringspin{to{transform:translateY(-50%) rotate(360deg)}}
+
+.cv-tag{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(122,154,184,.08);border:1px solid rgba(122,154,184,.2);
+  border-radius:100px;padding:6px 16px;font-family:var(--fm);font-size:11px;
+  color:var(--sl2);letter-spacing:.1em;position:relative;overflow:hidden}
+.cv-tag::after{content:'';position:absolute;top:0;left:-80%;width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(122,154,184,.2),transparent);
+  animation:shim 3.5s ease-in-out infinite}
+@keyframes shim{to{left:180%}}
+
+.cv-dot{width:7px;height:7px;border-radius:50%;background:var(--sl);
+  animation:dot-p 2.5s ease-in-out infinite}
+@keyframes dot-p{0%,100%{opacity:.5;box-shadow:none}50%{opacity:1;box-shadow:0 0 10px var(--sl)}}
+
+.cv-stats{display:flex;gap:44px}
+.cvs-n{font-family:var(--fm);font-size:2rem;font-weight:700;color:var(--sl2);line-height:1}
+.cvs-l{font-size:13px;color:var(--t3);margin-top:5px;letter-spacing:.04em}
+
+.chip{font-family:var(--fm);font-size:11px;padding:5px 14px;border-radius:100px;
+  border:1px solid rgba(122,154,184,.2);color:rgba(122,154,184,.6);
+  background:rgba(122,154,184,.06);letter-spacing:.06em}
+
+/* ── FLIP GRID ── */
+.flip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fcrd{perspective:1000px;cursor:pointer;height:240px}
+.finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  transition:transform .7s var(--e3)}
+.fcrd:hover .finner{transform:rotateY(180deg)}
+.ffront,.fback{position:absolute;inset:0;border-radius:16px;padding:24px 22px;
+  display:flex;flex-direction:column;gap:11px;backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;overflow:hidden}
+.ffront{background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--bd)}
+.fback{transform:rotateY(180deg);backdrop-filter:blur(18px);border:1px solid rgba(122,154,184,.25);
+  background:rgba(16,22,36,.9)}
+.ffront::before,.fback::before{content:'';position:absolute;top:0;left:10%;right:10%;
+  height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
+.ff-n{font-family:var(--fm);font-size:10px;letter-spacing:.12em;color:var(--t3);margin-bottom:2px}
+.ff-kw{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:800;line-height:1.1;letter-spacing:-.02em}
+.ff-t{font-size:15px;font-weight:600;color:var(--t1)}
+.ff-d{font-size:13px;color:var(--t2);line-height:1.6}
+.ff-hint{font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:auto;letter-spacing:.08em}
+.fb-kw{font-size:clamp(2.4rem,4.5vw,3.6rem);font-weight:900;line-height:1;
+  letter-spacing:-.03em;margin-bottom:10px}
+.fb-d{font-size:13px;color:var(--t2);line-height:1.65;flex:1}
+
+/* ── ARCH STEPS ── */
+.arch-row{display:flex;gap:12px;align-items:stretch}
+.astp{flex:1;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--bd);
+  border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:10px;
+  position:relative;overflow:hidden;transition:transform .3s var(--e2),border-color .3s}
+.astp::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;border-radius:16px 16px 0 0}
+.astp.c1::before{background:linear-gradient(90deg,var(--sl),var(--sl2))}
+.astp.c2::before{background:linear-gradient(90deg,var(--em),var(--sl2))}
+.astp.c3::before{background:linear-gradient(90deg,var(--vi),var(--sl))}
+.astp:hover{transform:translateY(-5px);border-color:var(--bdh)}
+.a-n{font-family:var(--fm);font-size:10px;letter-spacing:.12em;color:var(--t3)}
+.a-t{font-size:15px;font-weight:700;color:var(--t1)}
+.a-file{font-family:var(--fm);font-size:10px;color:var(--t2);opacity:.7}
+.a-d{font-size:13px;color:var(--t2);line-height:1.65;flex:1}
+.a-tag{font-family:var(--fm);font-size:10px;padding:3px 9px;border-radius:4px;
+  width:fit-content;margin-top:auto;border:1px solid rgba(122,154,184,.22);
+  background:rgba(122,154,184,.08);color:var(--sl)}
+.a-arr{color:var(--t3);display:flex;align-items:center;font-size:18px;flex-shrink:0}
+
+/* ── SKILLS MAP ── */
+.sk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}
+.skcrd{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--bd);
+  border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:9px;
+  transition:transform .3s var(--e2),border-color .3s}
+.skcrd:hover{transform:translateY(-6px);border-color:var(--bdh)}
+.sk-n{font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--sl)}
+.sk-t{font-size:14px;font-weight:700;line-height:1.3;color:var(--t1)}
+.sk-d{font-size:12px;color:var(--t2);line-height:1.5}
+.sk-b{font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:4px;
+  background:var(--sl3);color:var(--sl);border:1px solid rgba(122,154,184,.2);
+  width:fit-content;margin-top:auto}
+
+/* ── CONFIG CARD ── */
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px}
+.cfg-row{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--bd);
+  border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px}
+.cfg-k{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);width:88px;flex-shrink:0}
+.cfg-v{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--sl2)}
+.cfg-bar{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.cfg-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--sl),var(--sl2))}
+
+/* ── CLOSING ── */
+.close-h{font-size:clamp(2.2rem,6vw,5rem);font-weight:900;line-height:1.08;
+  letter-spacing:-.03em;color:rgba(226,232,244,.9);text-align:center;max-width:680px}
+.close-g{background:linear-gradient(135deg,var(--sl2),var(--em));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.close-sub{font-size:16px;color:rgba(122,154,184,.5);text-align:center}
+.close-card{display:inline-flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(122,154,184,.2);
+  padding:10px 22px;border-radius:100px}
+.close-from{font-family:var(--fm);font-size:10px;color:rgba(122,154,184,.3);
+  letter-spacing:.2em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+<nav id="nd"></nav>
+<canvas id="cv" style="position:fixed;inset:0;z-index:1;pointer-events:none"></canvas>
+
+<!-- S01 COVER -->
+<section class="slide" id="s01">
+  <div class="orbs">
+    <div class="orb" style="width:44vw;height:44vw;top:-10%;left:48%;background:rgba(90,130,180,.09)"></div>
+    <div class="orb" style="width:28vw;height:28vw;top:62%;left:-4%;background:rgba(106,180,212,.07);animation-delay:-5s"></div>
+  </div>
+  <div class="cv-ring"></div>
+  <div class="sc" style="z-index:2">
+    <div data-s><span class="cv-tag"><span class="cv-dot"></span>Data Analysis Report Skill · Demo C · Narrative × Glass × Expressive</span></div>
+    <h1 class="h1" data-s>把报告<br>做成<span class="g1"> Skill</span><br>让洞察可复现</h1>
+    <p class="sub" data-s>多维度组合式报告生成体系 — 选择 Mode / Palette / UI / Typography / Motion 五个轴，自由组合出最适合场景的报告风格</p>
+    <div class="cv-stats" data-s>
+      <div><div class="cvs-n" id="cn1">0</div><div class="cvs-l">报告模式</div></div>
+      <div><div class="cvs-n" id="cn2">0</div><div class="cvs-l">配色方案</div></div>
+      <div><div class="cvs-n" id="cn3">0</div><div class="cvs-l">UI 风格</div></div>
+      <div><div class="cvs-n">5<span style="font-size:.5em">×</span></div><div class="cvs-l">自由维度</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" data-s>
+      <span class="chip">Narrative Mode</span>
+      <span class="chip">Dark-Glass Palette</span>
+      <span class="chip">Glass UI</span>
+      <span class="chip">Sans Typography</span>
+      <span class="chip">Expressive Motion</span>
+    </div>
+  </div>
+  <span class="sn">01 / 07</span>
+</section>
+
+<!-- S02 WHAT IS SKILL -->
+<section class="slide" id="s02">
+  <div class="orbs">
+    <div class="orb" style="width:32vw;height:32vw;top:18%;left:58%;background:rgba(90,130,180,.07);animation-delay:-3s"></div>
+  </div>
+  <div class="sc">
+    <span class="ew" data-s>What</span>
+    <h2 class="h2" data-s>什么是 Data Analysis<br>Report Skill？</h2>
+    <p class="sub" data-s>不是一份报告，是一套生成报告的方法论——输入数据，输出完整 HTML 报告，平均 30 分钟，可复用可追溯</p>
+    <div class="flip-grid">
+      <div class="fcrd" data-s>
+        <div class="finner">
+          <div class="ffront">
+            <div class="ff-n">DIMENSION 01</div>
+            <div class="ff-kw" style="color:var(--sl2)">Mode</div>
+            <div class="ff-t">报告模式</div>
+            <div class="ff-d">Analysis（数据分析侧边栏）或 Narrative（全屏叙事 Slide），决定整体布局逻辑</div>
+            <div class="ff-hint">HOVER TO FLIP →</div>
+          </div>
+          <div class="fback">
+            <div class="fb-kw" style="color:var(--sl2)">2</div>
+            <div class="fb-d">Analysis 模式适合「读数据」场景，侧边栏导航 + 多 section + 大量图表。Narrative 模式（即本 demo）适合「讲故事」，全屏 scroll-snap，内容驱动</div>
+          </div>
+        </div>
+      </div>
+      <div class="fcrd" data-s>
+        <div class="finner">
+          <div class="ffront">
+            <div class="ff-n">DIMENSION 02 · 03</div>
+            <div class="ff-kw" style="color:var(--em)">Palette<br>+ UI</div>
+            <div class="ff-t">配色 × UI 风格</div>
+            <div class="ff-d">4 套配色（Warm/Ocean/Slate/Glass）× 4 种 UI（solid/glass/minimal/editorial），独立组合</div>
+            <div class="ff-hint">HOVER TO FLIP →</div>
+          </div>
+          <div class="fback">
+            <div class="fb-kw" style="color:var(--em)">16+</div>
+            <div class="fb-d">Palette 控制颜色体系，UI Style 控制卡片设计语言——毛玻璃、实色、极简线条、杂志感，两个轴完全独立，可以任意搭配</div>
+          </div>
+        </div>
+      </div>
+      <div class="fcrd" data-s>
+        <div class="finner">
+          <div class="ffront">
+            <div class="ff-n">DIMENSION 04 · 05</div>
+            <div class="ff-kw" style="color:var(--vi)">Type<br>+ Motion</div>
+            <div class="ff-t">字体 × 动效</div>
+            <div class="ff-d">3 种字体风格（serif/sans/mono）× 3 级动效（subtle/standard/expressive）</div>
+            <div class="ff-hint">HOVER TO FLIP →</div>
+          </div>
+          <div class="fback">
+            <div class="fb-kw" style="color:var(--vi)">3×3</div>
+            <div class="fb-d">Typography 决定气质：宋体有质感，Inter 现代，Space Mono 技术感。Motion 决定层次：expressive 是粒子+stagger+全量动效，subtle 仅淡入</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sn">02 / 07</span>
+</section>
+
+<!-- S03 THREE-LAYER ARCH -->
+<section class="slide" id="s03">
+  <div class="orbs">
+    <div class="orb" style="width:30vw;height:30vw;top:15%;left:60%;background:rgba(106,180,212,.07);animation-delay:-2s"></div>
+  </div>
+  <div class="sc">
+    <span class="ew em" data-s>Architecture</span>
+    <h2 class="h2" data-s>三层解耦架构<br>消除 AI 幻觉</h2>
+    <p class="sub" data-s>计算与判断完全分离，Python 只做数学，Claude 只做洞察——结论可追溯，数字可验证</p>
+    <div class="arch-row" data-s>
+      <div class="astp c1">
+        <div class="a-n">LAYER 01 · 定义层</div>
+        <div class="a-t">PRD 字段定义</div>
+        <div class="a-file">product_requirements.md</div>
+        <div class="a-d">指标口径、业务逻辑、分母定义——用自然语言写成，任何人接手都能对齐，整套体系的「单一真理源」</div>
+        <span class="a-tag">结构化定义 · 可追溯</span>
+      </div>
+      <div class="a-arr">→</div>
+      <div class="astp c2">
+        <div class="a-n">LAYER 02 · 计算层</div>
+        <div class="a-t">Python 纯计算</div>
+        <div class="a-file">analyze.py → data.json</div>
+        <div class="a-d">只做数学，不做判断，输出结构化 JSON。同样输入永远同样输出——可 diff，可单独验证，出错定位到行</div>
+        <span class="a-tag">确定性计算 · 无幻觉</span>
+      </div>
+      <div class="a-arr">→</div>
+      <div class="astp c3">
+        <div class="a-n">LAYER 03 · 洞察层</div>
+        <div class="a-t">Claude 报告生成</div>
+        <div class="a-file">JSON → HTML Report</div>
+        <div class="a-d">读取计算好的 JSON，生成带图表、带行动建议的完整 HTML 报告。Claude 做它擅长的——语言与判断，不做数学</div>
+        <span class="a-tag">洞察 · 可视化 · 行动</span>
+      </div>
+    </div>
+  </div>
+  <span class="sn">03 / 07</span>
+</section>
+
+<!-- S04 SKILLS MAP -->
+<section class="slide" id="s04">
+  <div class="orbs">
+    <div class="orb" style="width:26vw;height:26vw;top:22%;left:56%;background:rgba(155,148,184,.07);animation-delay:-4s"></div>
+  </div>
+  <div class="sc">
+    <span class="ew vi" data-s>Skills Landscape</span>
+    <h2 class="h2" data-s>5 个垂直 Skill<br>覆盖电商运营核心场景</h2>
+    <div class="sk-grid">
+      <div class="skcrd" data-s style="border-color:rgba(122,154,184,.2)">
+        <div class="sk-n">SKILL 01</div>
+        <div class="sk-t">退货分析<br>Return Analysis</div>
+        <div class="sk-d">多站趋势 × 原因码 × Pareto，结合 PRD 口径定义</div>
+        <span class="sk-b">退货优化</span>
+      </div>
+      <div class="skcrd" data-s>
+        <div class="sk-n">SKILL 02</div>
+        <div class="sk-t">卖点分析<br>Selling Point</div>
+        <div class="sk-d">NSR × Lift × 4色分级，Listing 优化导向</div>
+        <span class="sk-b">Listing 优化</span>
+      </div>
+      <div class="skcrd" data-s style="border-color:rgba(155,148,184,.18)">
+        <div class="sk-n" style="color:var(--vi)">SKILL 03</div>
+        <div class="sk-t">用户洞察<br>Review Insight</div>
+        <div class="sk-d">场景×人群交叉，19 场景 8 人群，热力矩阵</div>
+        <span class="sk-b" style="background:var(--vi2);color:var(--vi)">用户理解</span>
+      </div>
+      <div class="skcrd" data-s>
+        <div class="sk-n">SKILL 04</div>
+        <div class="sk-t">通用报告<br>Data Report</div>
+        <div class="sk-d">任意结构化数据 → 自动分析报告，5轴自由配置</div>
+        <span class="sk-b">通用引擎</span>
+      </div>
+      <div class="skcrd" data-s style="background:var(--sl3);border-color:rgba(122,154,184,.22)">
+        <div class="sk-n">SKILL 05</div>
+        <div class="sk-t">Skill Builder<br>元能力</div>
+        <div class="sk-d">30 分钟内搭建全新垂直分析 Skill，把建造能力本身固化</div>
+        <span class="sk-b">元能力</span>
+      </div>
+    </div>
+  </div>
+  <span class="sn">04 / 07</span>
+</section>
+
+<!-- S05 STYLE CONFIG -->
+<section class="slide" id="s05">
+  <div class="orbs">
+    <div class="orb" style="width:28vw;height:28vw;top:20%;left:58%;background:rgba(90,130,180,.08);animation-delay:-1s"></div>
+  </div>
+  <div class="sc">
+    <span class="ew" data-s>Phase 0 · Style Config</span>
+    <h2 class="h2" data-s>五轴组合<br>生成 Style Config</h2>
+    <p class="sub" data-s>Phase 0 逐轴问答，完成后输出结构化 Config，后续报告生成直接读取配置，风格与内容完全解耦</p>
+    <div class="cfg-grid" data-s>
+      <div class="cfg-row"><span class="cfg-k">Mode</span><div class="cfg-bar"><div class="cfg-fill" style="width:60%"></div></div><span class="cfg-v">narrative</span></div>
+      <div class="cfg-row"><span class="cfg-k">Palette</span><div class="cfg-bar"><div class="cfg-fill" style="width:100%;background:linear-gradient(90deg,var(--sl),var(--sl2))"></div></div><span class="cfg-v">dark-glass</span></div>
+      <div class="cfg-row"><span class="cfg-k">UI Style</span><div class="cfg-bar"><div class="cfg-fill" style="width:80%;background:linear-gradient(90deg,var(--em),var(--sl))"></div></div><span class="cfg-v">glass</span></div>
+      <div class="cfg-row"><span class="cfg-k">Typography</span><div class="cfg-bar"><div class="cfg-fill" style="width:55%;background:linear-gradient(90deg,var(--vi),var(--sl))"></div></div><span class="cfg-v">sans</span></div>
+      <div class="cfg-row" style="grid-column:1/-1"><span class="cfg-k">Motion</span><div class="cfg-bar"><div class="cfg-fill" style="width:100%"></div></div><span class="cfg-v">expressive ← 粒子 + stagger + 全量动效</span></div>
+    </div>
+    <div data-s style="background:rgba(122,154,184,.06);border:1px solid rgba(122,154,184,.18);border-radius:14px;padding:18px 22px;font-family:var(--fm);font-size:12px;color:var(--t2);line-height:1.8;max-width:600px">
+      <span style="color:var(--sl)">╔═ STYLE CONFIG v3.0 ═══════════════╗</span><br>
+      <span style="color:var(--t2)">  Mode       │ <span style="color:var(--sl2)">narrative</span></span><br>
+      <span style="color:var(--t2)">  Palette    │ <span style="color:var(--sl2)">dark-glass</span></span><br>
+      <span style="color:var(--t2)">  UI Style   │ <span style="color:var(--sl2)">glass</span></span><br>
+      <span style="color:var(--t2)">  Typography │ <span style="color:var(--sl2)">sans</span></span><br>
+      <span style="color:var(--t2)">  Motion     │ <span style="color:var(--sl2)">expressive</span></span><br>
+      <span style="color:var(--sl)">╚═══════════════════════════════════╝</span>
+    </div>
+  </div>
+  <span class="sn">05 / 07</span>
+</section>
+
+<!-- S06 HOW TO USE -->
+<section class="slide" id="s06">
+  <div class="orbs">
+    <div class="orb" style="width:30vw;height:30vw;top:15%;left:54%;background:rgba(106,180,212,.08);animation-delay:-6s"></div>
+  </div>
+  <div class="sc">
+    <span class="ew em" data-s>Workflow</span>
+    <h2 class="h2" data-s>从数据到报告<br>三步完成</h2>
+    <div class="arch-row" data-s>
+      <div class="astp c1" style="flex:1">
+        <div class="a-n">STEP 01</div>
+        <div class="a-t" style="font-size:1.1rem">Phase 0 选风格</div>
+        <div class="a-d">Claude 逐轴询问 5 个维度偏好，输出 Style Config 块。一次配置，可复用到后续所有同类报告</div>
+        <span class="a-tag">~3 min</span>
+      </div>
+      <div class="a-arr">→</div>
+      <div class="astp c2" style="flex:1">
+        <div class="a-n">STEP 02</div>
+        <div class="a-t" style="font-size:1.1rem">Phase 1 准备数据</div>
+        <div class="a-d">上传原始数据（CSV/Excel/JSON），Claude 读取数据结构，规划报告章节，确认后开始生成</div>
+        <span class="a-tag">~5 min</span>
+      </div>
+      <div class="a-arr">→</div>
+      <div class="astp c3" style="flex:1">
+        <div class="a-n">STEP 03</div>
+        <div class="a-t" style="font-size:1.1rem">Phase 2 生成报告</div>
+        <div class="a-d">按 Config 调用对应维度的代码库，生成自包含单文件 HTML，含图表、洞察、行动建议</div>
+        <span class="a-tag">~20 min</span>
+      </div>
+    </div>
+    <div class="flip-grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
+      <div class="fcrd" data-s style="height:180px">
+        <div class="finner">
+          <div class="ffront"><div class="ff-n">NARRATIVE MODE</div><div class="ff-t" style="font-size:14px">全屏 Slide 布局</div><div class="ff-d" style="font-size:12px">scroll-snap · 翻转卡 · 粒子背景 · 旋转光环 · stagger 入场</div><div class="ff-hint">HOVER →</div></div>
+          <div class="fback"><div class="fb-kw" style="font-size:1.8rem;color:var(--sl2)">Slide</div><div class="fb-d" style="font-size:12px">适合作品集、Demo 展示、对外汇报、有故事线的内容——让读者「翻页」而不是「滚动」</div></div>
+        </div>
+      </div>
+      <div class="fcrd" data-s style="height:180px">
+        <div class="finner">
+          <div class="ffront"><div class="ff-n">ANALYSIS MODE</div><div class="ff-t" style="font-size:14px">侧边栏 + Section</div><div class="ff-d" style="font-size:12px">sidebar · KPI strip · ECharts 图表 · tab 切换 · 地图 · 数据表格</div><div class="ff-hint">HOVER →</div></div>
+          <div class="fback"><div class="fb-kw" style="font-size:1.8rem;color:var(--em)">Data</div><div class="fb-d" style="font-size:12px">适合数据分析报告、月度复盘、运营数据、需要「深读」和导航跳转的场景</div></div>
+        </div>
+      </div>
+      <div class="fcrd" data-s style="height:180px">
+        <div class="finner">
+          <div class="ffront"><div class="ff-n">COMBINED</div><div class="ff-t" style="font-size:14px">5 轴自由组合</div><div class="ff-d" style="font-size:12px">Mode × Palette × UI × Typography × Motion — 任意组合，Phase 0 一次选定</div><div class="ff-hint">HOVER →</div></div>
+          <div class="fback"><div class="fb-kw" style="font-size:1.8rem;color:var(--vi)">5×</div><div class="fb-d" style="font-size:12px">Style Config 文本块可保存复用，换数据不换风格，同一团队始终产出一致视觉的报告</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sn">06 / 07</span>
+</section>
+
+<!-- S07 CLOSING -->
+<section class="slide" id="s07">
+  <div class="orbs">
+    <div class="orb" style="width:44vw;height:44vw;top:-8%;left:44%;background:rgba(90,130,180,.1)"></div>
+    <div class="orb" style="width:28vw;height:28vw;top:62%;left:58%;background:rgba(106,180,212,.08);animation-delay:-4s"></div>
+    <div class="orb" style="width:20vw;height:20vw;top:60%;left:30%;background:rgba(155,148,184,.07);animation-delay:-8s"></div>
+  </div>
+  <div class="sc center" style="z-index:2">
+    <span class="ew" data-s style="color:rgba(122,154,184,.4)">Demo C · Narrative × Glass × Expressive</span>
+    <h2 class="close-h" data-s>可复用的方法<br>才是<span class="close-g">真正的资产</span></h2>
+    <p class="close-sub" data-s>Skill 让经验固化 · Script 让结论可信 · Config 让风格统一</p>
+    <div class="close-card" data-s><div class="cv-dot"></div><span style="font-size:14px;color:var(--t2)">智能工人 · 吴怡霏</span></div>
+    <div class="close-from" data-s>— from iwas</div>
+  </div>
+  <span class="sn">07 / 07</span>
+</section>
+
+<script>
+/* ── Particles ── */
+(function(){
+  const cv=document.getElementById('cv');if(!cv)return;
+  const ctx=cv.getContext('2d');let W,H,pts=[];
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;cv.style.width=W+'px';cv.style.height=H+'px';pts=[];
+    const N=Math.min(70,Math.floor(W*H/10000));
+    for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,r:.5+Math.random()*1.4,o:.1+Math.random()*.22});
+  }
+  let mx=-9999,my=-9999;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
+  function draw(){ctx.clearRect(0,0,W,H);
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<130){ctx.beginPath();ctx.strokeStyle=`rgba(122,154,184,${0.07*(1-d/130)})`;ctx.lineWidth=.6;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}
+    }
+    pts.forEach(p=>{
+      const dx=mx-p.x,dy=my-p.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<200){p.vx+=dx/d*.014;p.vy+=dy/d*.014;}
+      p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(122,154,184,${p.o})`;ctx.fill();
+    });requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);resize();draw();
+})();
+
+/* ── Counters ── */
+function countUp(el,to){
+  const dur=900,st=Date.now();
+  (function tick(){const t=Math.min(1,(Date.now()-st)/dur),e=1-(1-t)**3;
+    el.textContent=Math.round(e*to);if(t<1)requestAnimationFrame(tick);else el.textContent=to;
+  })();
+}
+
+/* ── Slides ── */
+const slides=Array.from(document.querySelectorAll('.slide'));
+let cur=0,lastW=0;
+slides.forEach(s=>{s.querySelectorAll('[data-s]').forEach(el=>{el.classList.remove('vis');el.style.transition='none';});});
+
+const nd=document.getElementById('nd');
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='nd';d.onclick=()=>go(i);nd.appendChild(d);});
+const dots=nd.querySelectorAll('.nd');
+
+function revealSlide(sl){
+  const items=sl.querySelectorAll('[data-s]');
+  items.forEach(el=>{el.classList.remove('vis');el.style.transition='none';});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    items.forEach((el,i)=>setTimeout(()=>{el.style.transition='';el.classList.add('vis');},55+i*100));
+  }));
+}
+function hideSlide(sl){sl.querySelectorAll('[data-s]').forEach(el=>{el.classList.remove('vis');el.style.transition='none';});}
+
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      cur=slides.indexOf(e.target);
+      dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
+      document.getElementById('pb').style.width=((cur+1)/slides.length*100)+'%';
+      revealSlide(e.target);
+      if(e.target.id==='s01'){
+        setTimeout(()=>{countUp(document.getElementById('cn1'),2);countUp(document.getElementById('cn2'),4);countUp(document.getElementById('cn3'),4);},300);
+      }
+    } else {
+      hideSlide(e.target);
+    }
+  });
+},{threshold:.45});
+slides.forEach(s=>io.observe(s));
+
+function go(i){if(i>=0&&i<slides.length)slides[i].scrollIntoView({behavior:'smooth'});}
+document.addEventListener('keydown',e=>{
+  if(['ArrowDown','ArrowRight',' '].includes(e.key)){e.preventDefault();go(cur+1);}
+  else if(['ArrowUp','ArrowLeft'].includes(e.key)){e.preventDefault();go(cur-1);}
+});
+let lastWh=0;
+document.addEventListener('wheel',e=>{
+  e.preventDefault();const n=Date.now();if(n-lastWh<800)return;lastWh=n;go(cur+(e.deltaY>0?1:-1));
+},{passive:false});
+let sy=0;
+document.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{const d=sy-e.changedTouches[0].clientY;if(Math.abs(d)>45)go(cur+(d>0?1:-1));});
+</script>
+</body>
+</html>
