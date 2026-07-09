@@ -59,26 +59,33 @@ Phase 0 Artifact.
 
 ## Phase 0: Style Discovery
 
-### Option A — Phase 0 Artifact (Recommended)
+### Mandatory first step when style is missing
 
-**When the user has not specified a style**, generate the Phase 0 Style Selector
-as a Claude Artifact. This is a 5-step interactive UI where the user clicks
-through each axis and receives a copyable Style Config at the end.
+**If the user has not pasted a complete Style Config block, Phase 0 is mandatory.**
+Do not choose defaults, ask direct style questions, or start generating the
+report. First provide the Phase 0 Style Selector to the user and wait for the
+generated Style Config.
 
-> **Read the embedded artifact code at the bottom of this file** and output it
-> as an HTML Artifact. Do not modify it — it is complete and self-contained.
+Use the canonical selector file directly:
+
+```
+demos/phase0-style-selector.html
+```
+
+Deliver that HTML to the user as the Phase 0 artifact/output without modifying
+it. In Codex-style local workflows, copy this exact file to the user-facing
+outputs directory and link it. In artifact-capable chat workflows, render this
+exact file as the HTML artifact.
 
 Tell the user:
-> "请在下方 Artifact 里选择你的风格，完成后把生成的 Config 块复制过来，
-> 我就开始生成报告。"
 
-### Option B — Direct Question
+> "请先在 Phase 0 Style Selector 里选择报告风格。完成 5 步后，复制页面生成的
+> STYLE CONFIG 块发回来；我收到 Config 后再进入数据确认、结构规划和报告生成。"
 
-**When the user is in a hurry or has already specified some axes**, ask only
-the missing axes using `ask_user_input_v0`. Cover all unspecified axes in a
-single call.
+After providing Phase 0, stop. The next report-generation step begins only
+after the user sends back the Style Config.
 
-### Option C — Style Config Provided
+### Style Config Provided
 
 **When the user pastes a Style Config block**, parse it immediately:
 
@@ -92,12 +99,6 @@ Motion     → dimensions/motion.md
 
 Acknowledge the config, confirm the data topic, and proceed to Phase 1.
 
-### Default Config (if user says "just build it")
-
-```
-Mode: analysis · Palette: warm-green · UI Style: solid
-Typography: serif · Motion: standard
-```
 
 ---
 
@@ -213,10 +214,11 @@ every time the user scrolls back to top.
 
 ---
 
-## Phase 0 Artifact — Embedded Code
+## Phase 0 Artifact
 
-Output this HTML verbatim as a Claude Artifact when running Phase 0 Style Discovery.
-Do not modify the code — it is complete.
+The canonical Phase 0 artifact is `demos/phase0-style-selector.html`.
+Use that file directly whenever Phase 0 is required. The embedded copy below is
+legacy reference material only; prefer the demo file so users always receive the maintained selector.
 
 ```html
 <!DOCTYPE html>

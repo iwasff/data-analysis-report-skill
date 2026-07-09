@@ -31,5 +31,11 @@ Restart Codex after installing so the skill is loaded.
 
 ```text
 Use data-analysis-report in narrative mode to create an HTML report from this material.
-If no style config is provided, start with the Phase 0 style selector.
+If no Style Config is provided, first give me the Phase 0 selector and wait for
+me to paste the generated Config before creating the report.
 ```
+
+When no complete Style Config is provided, the skill must start with
+`data-analysis-report/demos/phase0-style-selector.html`. The selector is the
+canonical Phase 0 artifact; users pick the 5 style axes there, copy the generated
+Config block, and paste it back to continue report generation.

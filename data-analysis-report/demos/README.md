@@ -98,11 +98,13 @@ font pair. Low-saturation teal color family throughout.
 
 ## phase0-style-selector.html
 
-Interactive 5-step style selector. Users click through each axis (Mode → Palette →
-UI Style → Typography → Motion) and receive a copyable Style Config block at the end.
+Interactive 5-step style selector. Users click through each axis (Mode, Palette,
+UI Style, Typography, Motion) and receive a copyable Style Config block at the end.
 
-**Use:** Output this as a Claude Artifact in Phase 0 when the user has not yet
-specified a style. The SKILL.md Phase 0 section has the full artifact code.
+**Use:** This file is the canonical Phase 0 artifact. When the user has not yet
+provided a complete Style Config, output this exact HTML file first and stop.
+Tell the user to complete the 5 steps, copy the generated Style Config block,
+and paste it back before any report generation begins.
 
 ---
 
