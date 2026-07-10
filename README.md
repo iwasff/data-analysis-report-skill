@@ -2,6 +2,10 @@
 
 Standalone Codex skill for building polished, self-contained HTML data reports, dashboards, and narrative slide-style reports.
 
+## DEMO
+
+https://github.com/user-attachments/assets/5bad7de6-79b7-4206-8a6d-cc667861cb00
+
 ## Install
 
 In Codex, ask:
