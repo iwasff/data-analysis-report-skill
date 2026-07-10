@@ -4,7 +4,7 @@ Standalone Codex skill for building polished, self-contained HTML data reports, 
 
 ## DEMO
 
-https://github.com/user-attachments/assets/5bad7de6-79b7-4206-8a6d-cc667861cb00
+https://github.com/user-attachments/assets/d6643464-f784-4999-b349-13a3dd22aed6
 
 ## Install
 
