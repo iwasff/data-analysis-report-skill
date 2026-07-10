@@ -200,27 +200,27 @@ body{font-family:var(--ff);background:var(--bg);color:var(--text);height:100%;ov
   <div class="sc">
     <span class="ew" data-s>Architecture</span>
     <h2 class="h2" data-s>三层架构<br>让报告<em>可信赖</em></h2>
-    <p class="sub" data-s>计算与判断分离，Python 只做数学，Claude 只做语言——两层分工，根本上消除 AI 幻觉</p>
+    <p class="sub" data-s>规则、计算与生成分离：先统一口径，再产出结构化结果，最后生成可阅读报告</p>
     <div class="arch-row reveal">
       <div class="arch-item">
         <div class="ai-n">LAYER 01</div>
-        <div class="ai-t">PRD 字段定义</div>
-        <div class="ai-file">product_requirements.md</div>
+        <div class="ai-t">指标口径定义</div>
+        <div class="ai-file">metric_spec.md</div>
         <div class="ai-d">每个指标的口径、分母、计算逻辑，用自然语言写成。整套体系的「单一真理源」——换人、换数据都不用重新对齐</div>
         <div class="ai-bar"></div>
       </div>
       <div class="arch-item">
         <div class="ai-n">LAYER 02</div>
-        <div class="ai-t">Python 纯计算</div>
-        <div class="ai-file">analyze.py → data.json</div>
-        <div class="ai-d">只做聚合、排序、计算，输出结构化 JSON，不包含任何自然语言判断。同样输入永远同样输出，可 diff，可验证</div>
+        <div class="ai-t">确定性计算</div>
+        <div class="ai-file">source data → structured result</div>
+        <div class="ai-d">只做聚合、排序和计算，输出结构化结果。同样输入得到同样输出，可对比，可验证</div>
         <div class="ai-bar" style="background:var(--primary)"></div>
       </div>
       <div class="arch-item">
         <div class="ai-n">LAYER 03</div>
-        <div class="ai-t">Claude 报告生成</div>
-        <div class="ai-file">JSON → HTML Report</div>
-        <div class="ai-d">读取计算好的 JSON，生成洞察和行动建议。Claude 做它擅长的——语言与判断，把数学交给 Python</div>
+        <div class="ai-t">报告页面生成</div>
+        <div class="ai-file">structured result → HTML Report</div>
+        <div class="ai-d">读取结构化结果，生成解释和行动建议。生成层负责表达，不改写底层数据</div>
         <div class="ai-bar" style="background:var(--muted)"></div>
       </div>
     </div>
@@ -268,7 +268,7 @@ body{font-family:var(--ff);background:var(--bg);color:var(--text);height:100%;ov
   Typography │ <span class="hl">serif</span>
   Motion     │ <span class="hl">standard</span>
 <span style="color:rgba(212,170,112,.5)">╚════════════════════════════╝</span></div>
-        <p style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.7">Phase 0 问答后自动输出此格式，粘贴进新对话，Claude 读到 Config 块直接生成对应风格，无需重新选择五个轴</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.7">Phase 0 完成后自动输出此格式，粘贴进新对话，报告助手读取 Config 块直接生成对应风格，无需重新选择五个轴</p>
       </div>
       <div class="col-rule">
         <div style="margin-bottom:16px">
