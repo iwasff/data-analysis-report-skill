@@ -297,31 +297,31 @@ canvas#cv{position:absolute;inset:0;z-index:0;pointer-events:none}
   </div>
   <div class="sc">
     <span class="ew em" data-s>Architecture</span>
-    <h2 class="h2" data-s>三层解耦架构<br>消除 AI 幻觉</h2>
-    <p class="sub" data-s>计算与判断完全分离，Python 只做数学，Claude 只做洞察——结论可追溯，数字可验证</p>
+    <h2 class="h2" data-s>三层解耦架构<br>让结论可验证</h2>
+    <p class="sub" data-s>规则、计算与生成分离：先统一口径，再产出结构化结果，最后生成可阅读报告</p>
     <div class="arch-row" data-s>
       <div class="astp c1">
-        <div class="a-n">LAYER 01 · 定义层</div>
-        <div class="a-t">PRD 字段定义</div>
-        <div class="a-file">product_requirements.md</div>
+        <div class="a-n">LAYER 01 · 规则层</div>
+        <div class="a-t">指标口径定义</div>
+        <div class="a-file">metric_spec.md</div>
         <div class="a-d">指标口径、计算逻辑、分母定义——用自然语言写成，任何人接手都能对齐，整套体系的「单一真理源」</div>
         <span class="a-tag">结构化定义 · 可追溯</span>
       </div>
       <div class="a-arr">→</div>
       <div class="astp c2">
         <div class="a-n">LAYER 02 · 计算层</div>
-        <div class="a-t">Python 纯计算</div>
-        <div class="a-file">analyze.py → data.json</div>
-        <div class="a-d">只做数学，不做判断，输出结构化 JSON。同样输入永远同样输出——可 diff，可单独验证，出错定位到行</div>
-        <span class="a-tag">确定性计算 · 无幻觉</span>
+        <div class="a-t">确定性计算</div>
+        <div class="a-file">source data → structured result</div>
+        <div class="a-d">只做聚合、排序和计算，输出结构化结果。同样输入得到同样输出——可对比，可单独验证，出错定位到字段</div>
+        <span class="a-tag">可验证计算 · 可复现</span>
       </div>
       <div class="a-arr">→</div>
       <div class="astp c3">
-        <div class="a-n">LAYER 03 · 洞察层</div>
-        <div class="a-t">Claude 报告生成</div>
-        <div class="a-file">JSON → HTML Report</div>
-        <div class="a-d">读取计算好的 JSON，生成带图表、带行动建议的完整 HTML 报告。Claude 做它擅长的——语言与判断，不做数学</div>
-        <span class="a-tag">洞察 · 可视化 · 行动</span>
+        <div class="a-n">LAYER 03 · 生成层</div>
+        <div class="a-t">报告页面生成</div>
+        <div class="a-file">structured result → HTML Report</div>
+        <div class="a-d">读取结构化结果，生成带图表、解释和行动建议的完整 HTML 报告。生成层负责表达，不改写底层数据</div>
+        <span class="a-tag">解释 · 可视化 · 行动</span>
       </div>
     </div>
   </div>
@@ -413,14 +413,14 @@ canvas#cv{position:absolute;inset:0;z-index:0;pointer-events:none}
       <div class="astp c1" style="flex:1">
         <div class="a-n">STEP 01</div>
         <div class="a-t" style="font-size:1.1rem">Phase 0 选风格</div>
-        <div class="a-d">Claude 逐轴询问 5 个维度偏好，输出 Style Config 块。一次配置，可复用到后续所有同类报告</div>
+        <div class="a-d">报告助手先提供 5 个维度的样式选择器，输出 Style Config 块。一次配置，可复用到后续所有同类报告</div>
         <span class="a-tag">~3 min</span>
       </div>
       <div class="a-arr">→</div>
       <div class="astp c2" style="flex:1">
         <div class="a-n">STEP 02</div>
         <div class="a-t" style="font-size:1.1rem">Phase 1 准备数据</div>
-        <div class="a-d">上传原始数据（CSV/Excel/JSON），Claude 读取数据结构，规划报告章节，确认后开始生成</div>
+        <div class="a-d">上传原始数据（CSV/Excel/JSON），报告助手读取数据结构，规划报告章节，确认后开始生成</div>
         <span class="a-tag">~5 min</span>
       </div>
       <div class="a-arr">→</div>
